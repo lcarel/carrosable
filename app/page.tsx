@@ -1,9 +1,20 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import dynamic from 'next/dynamic'
 import { trails } from '@/data/trails'
+import { Trail } from '@/types'
 import TrailCard from '@/components/TrailCard'
-import { Search, SlidersHorizontal } from 'lucide-react'
+import { Search, SlidersHorizontal, LayoutGrid, Map } from 'lucide-react'
+
+const TrailMap = dynamic(() => import('@/components/TrailMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[600px] bg-gray-100 rounded-2xl animate-pulse flex items-center justify-center text-gray-400">
+      Chargement de la carte…
+    </div>
+  ),
+})
 
 const levelLabels: Record<number, string> = {
   1: 'Peu carrossable',
@@ -11,19 +22,30 @@ const levelLabels: Record<number, string> = {
   3: 'Très carrossable',
 }
 
-function StrollerFilterIcon({ level, active }: { level: number; active: boolean }) {
+function StrollerFilterButton({
+  level,
+  active,
+  onClick,
+}: {
+  level: number
+  active: boolean
+  onClick: () => void
+}) {
   return (
-    <button className={`flex items-center gap-2 px-4 py-2 rounded-full border-2 text-sm font-semibold transition-all ${
-      active
-        ? level === 1
-          ? 'bg-red-500 border-red-500 text-white'
-          : level === 2
-          ? 'bg-amber-500 border-amber-500 text-white'
-          : 'bg-green-600 border-green-600 text-white'
-        : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
-    }`}>
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-2 px-4 py-2 rounded-full border-2 text-sm font-semibold transition-all ${
+        active
+          ? level === 1
+            ? 'bg-red-500 border-red-500 text-white'
+            : level === 2
+            ? 'bg-amber-500 border-amber-500 text-white'
+            : 'bg-green-600 border-green-600 text-white'
+          : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
+      }`}
+    >
       <span>{'🛺'.repeat(level)}</span>
-      <span>{levelLabels[level]}</span>
+      <span className="hidden sm:inline">{levelLabels[level]}</span>
     </button>
   )
 }
@@ -32,6 +54,8 @@ export default function HomePage() {
   const [search, setSearch] = useState('')
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null)
   const [selectedRegion, setSelectedRegion] = useState('')
+  const [view, setView] = useState<'list' | 'map'>('list')
+  const [selectedTrailId, setSelectedTrailId] = useState<string | undefined>()
 
   const regions = useMemo(
     () => Array.from(new Set(trails.map((t) => t.region))).sort(),
@@ -52,20 +76,21 @@ export default function HomePage() {
     })
   }, [search, selectedLevel, selectedRegion])
 
+  const selectedTrail: Trail | undefined = selectedTrailId
+    ? filtered.find((t) => t.id === selectedTrailId)
+    : undefined
+
   return (
     <>
       {/* Hero */}
       <section className="bg-gradient-to-br from-green-700 to-green-900 text-white py-16 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-5xl mb-4">🛺</p>
-          <h1 className="text-4xl font-bold mb-3">
-            Balades adaptées aux poussettes
-          </h1>
+          <h1 className="text-4xl font-bold mb-3">Balades adaptées aux poussettes</h1>
           <p className="text-green-100 text-lg mb-8">
-            Découvrez et partagez les meilleures randonnées carrossables pour profiter de la nature en famille.
+            Découvrez et partagez les meilleures randonnées carrossables pour profiter de la
+            nature en famille.
           </p>
-
-          {/* Search bar */}
           <div className="relative max-w-xl mx-auto">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
@@ -84,22 +109,22 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-1.5 text-gray-500 text-sm">
             <SlidersHorizontal className="w-4 h-4" />
-            <span className="font-medium">Filtrer :</span>
+            <span className="font-medium hidden sm:inline">Filtrer :</span>
           </div>
 
           {[1, 2, 3].map((level) => (
-            <div
+            <StrollerFilterButton
               key={level}
+              level={level}
+              active={selectedLevel === level}
               onClick={() => setSelectedLevel(selectedLevel === level ? null : level)}
-            >
-              <StrollerFilterIcon level={level} active={selectedLevel === level} />
-            </div>
+            />
           ))}
 
           <select
             value={selectedRegion}
             onChange={(e) => setSelectedRegion(e.target.value)}
-            className="ml-auto text-sm border border-gray-200 rounded-full px-4 py-2 bg-white text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="text-sm border border-gray-200 rounded-full px-4 py-2 bg-white text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             <option value="">Toutes les régions</option>
             {regions.map((r) => (
@@ -108,14 +133,41 @@ export default function HomePage() {
               </option>
             ))}
           </select>
+
+          {/* View toggle */}
+          <div className="ml-auto flex items-center bg-gray-100 rounded-full p-1">
+            <button
+              onClick={() => setView('list')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                view === 'list'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              <LayoutGrid className="w-4 h-4" />
+              <span className="hidden sm:inline">Liste</span>
+            </button>
+            <button
+              onClick={() => setView('map')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                view === 'map'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              <Map className="w-4 h-4" />
+              <span className="hidden sm:inline">Carte</span>
+            </button>
+          </div>
         </div>
       </section>
 
-      {/* Trail grid */}
+      {/* Results */}
       <section className="max-w-6xl mx-auto px-4 py-10">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-gray-900">
-            {filtered.length} balade{filtered.length !== 1 ? 's' : ''} trouvée{filtered.length !== 1 ? 's' : ''}
+            {filtered.length} balade{filtered.length !== 1 ? 's' : ''} trouvée
+            {filtered.length !== 1 ? 's' : ''}
             {selectedLevel ? ` · ${levelLabels[selectedLevel]}` : ''}
             {selectedRegion ? ` · ${selectedRegion}` : ''}
           </h2>
@@ -139,11 +191,46 @@ export default function HomePage() {
             <p className="text-lg font-medium">Aucune balade trouvée</p>
             <p className="text-sm mt-2">Essayez de modifier vos filtres.</p>
           </div>
-        ) : (
+        ) : view === 'list' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((trail) => (
               <TrailCard key={trail.id} trail={trail} />
             ))}
+          </div>
+        ) : (
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Map */}
+            <div className="flex-1 h-[600px]">
+              <TrailMap
+                trails={filtered}
+                selectedId={selectedTrailId}
+                onSelect={setSelectedTrailId}
+              />
+            </div>
+
+            {/* Selected trail card */}
+            <div className="lg:w-80">
+              {selectedTrail ? (
+                <div className="sticky top-40">
+                  <p className="text-xs text-gray-500 uppercase font-semibold mb-3 tracking-wide">
+                    Balade sélectionnée
+                  </p>
+                  <TrailCard trail={selectedTrail} />
+                  <button
+                    onClick={() => setSelectedTrailId(undefined)}
+                    className="mt-2 text-xs text-gray-400 hover:text-gray-600 w-full text-center"
+                  >
+                    Désélectionner
+                  </button>
+                </div>
+              ) : (
+                <div className="text-center py-12 text-gray-400 border-2 border-dashed border-gray-200 rounded-2xl">
+                  <Map className="w-8 h-8 mx-auto mb-3 opacity-50" />
+                  <p className="text-sm font-medium">Cliquez sur un marqueur</p>
+                  <p className="text-xs mt-1">pour voir la balade</p>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </section>
@@ -157,21 +244,18 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8 text-left">
             {[
               {
-                level: 1,
                 icon: '🛺',
                 title: 'Peu carrossable',
                 desc: 'Sentiers avec obstacles, cailloux, forte pente. Poussette tout-terrain obligatoire et effort physique important.',
                 color: 'border-red-200 bg-red-50',
               },
               {
-                level: 2,
                 icon: '🛺🛺',
                 title: 'Carrossable',
                 desc: 'Chemin en terre ou stabilisé. Poussette robuste conseillée. Quelques passages délicats mais praticable.',
                 color: 'border-amber-200 bg-amber-50',
               },
               {
-                level: 3,
                 icon: '🛺🛺🛺',
                 title: 'Très carrossable',
                 desc: 'Chemin asphalté, piste cyclable ou allée large et lisse. Toutes les poussettes passent sans difficulté.',

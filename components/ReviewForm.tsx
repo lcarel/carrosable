@@ -6,7 +6,7 @@ import { Review } from '@/types'
 
 interface ReviewFormProps {
   trailId: string
-  onSubmit: (review: Review) => void
+  onSubmit: (review: Omit<Review, 'id' | 'date'>) => Promise<void>
 }
 
 const strollerTypes = [
@@ -23,40 +23,42 @@ export default function ReviewForm({ trailId, onSubmit }: ReviewFormProps) {
   const [rating, setRating] = useState(0)
   const [comment, setComment] = useState('')
   const [strollerType, setStrollerType] = useState('')
+  const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!author.trim()) return setError('Merci de renseigner votre prénom.')
     if (rating === 0) return setError('Merci de donner une note.')
     if (!comment.trim()) return setError('Merci de laisser un commentaire.')
 
-    const review: Review = {
-      id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-      trailId,
-      author: author.trim(),
-      rating,
-      comment: comment.trim(),
-      strollerType,
-      date: new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' }),
-    }
-
-    onSubmit(review)
-    setSubmitted(true)
-    setAuthor('')
-    setRating(0)
-    setComment('')
-    setStrollerType('')
+    setSubmitting(true)
     setError('')
-    setTimeout(() => setSubmitted(false), 4000)
+
+    try {
+      await onSubmit({
+        trailId,
+        author: author.trim(),
+        rating,
+        comment: comment.trim(),
+        strollerType: strollerType || undefined,
+      })
+      setSubmitted(true)
+      setAuthor('')
+      setRating(0)
+      setComment('')
+      setStrollerType('')
+      setTimeout(() => setSubmitted(false), 4000)
+    } catch {
+      setError('Une erreur est survenue. Merci de réessayer.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-gray-50 rounded-2xl p-5 border border-gray-200"
-    >
+    <form onSubmit={handleSubmit} className="bg-gray-50 rounded-2xl p-5 border border-gray-200">
       <h3 className="font-bold text-gray-900 mb-4 text-lg">Laisser un avis</h3>
 
       {submitted && (
@@ -117,9 +119,10 @@ export default function ReviewForm({ trailId, onSubmit }: ReviewFormProps) {
 
         <button
           type="submit"
-          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
+          disabled={submitting}
+          className="w-full bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
         >
-          Publier mon avis
+          {submitting ? 'Publication en cours…' : 'Publier mon avis'}
         </button>
       </div>
     </form>
