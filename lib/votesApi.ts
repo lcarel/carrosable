@@ -1,4 +1,4 @@
-import { supabase, isSupabaseConfigured } from './supabase'
+import { getSupabase, isSupabaseConfigured } from './supabase'
 
 export async function fetchVoteCounts(
   trailId: string
@@ -10,7 +10,7 @@ export async function fetchVoteCounts(
     return data.counts ?? { up: 0, down: 0 }
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('votes')
     .select('value')
     .eq('trail_id', trailId)
@@ -33,7 +33,7 @@ export async function fetchUserVote(
     return data.userVote ?? null
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('votes')
     .select('value')
     .eq('trail_id', trailId)
@@ -62,9 +62,9 @@ export async function upsertVote(
   }
 
   if (value === null) {
-    await supabase.from('votes').delete().eq('trail_id', trailId).eq('session_id', sessionId)
+    await getSupabase().from('votes').delete().eq('trail_id', trailId).eq('session_id', sessionId)
   } else {
-    await supabase.from('votes').upsert(
+    await getSupabase().from('votes').upsert(
       { trail_id: trailId, session_id: sessionId, value },
       { onConflict: 'trail_id,session_id' }
     )

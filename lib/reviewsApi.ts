@@ -1,4 +1,4 @@
-import { supabase, isSupabaseConfigured } from './supabase'
+import { getSupabase, isSupabaseConfigured } from './supabase'
 import { Review } from '@/types'
 
 function rowToReview(row: Record<string, unknown>): Review {
@@ -23,7 +23,7 @@ export async function fetchReviews(trailId: string): Promise<Review[]> {
     return stored ? JSON.parse(stored) : []
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('reviews')
     .select('*')
     .eq('trail_id', trailId)
@@ -55,7 +55,7 @@ export async function addReview(
     return newReview
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('reviews')
     .insert({
       trail_id: review.trailId,
