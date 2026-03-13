@@ -106,25 +106,51 @@ export default function HomePage() {
 
       {/* Filters */}
       <section className="bg-white border-b border-gray-200 sticky top-16 z-40 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-1.5 text-gray-500 text-sm">
-            <SlidersHorizontal className="w-4 h-4" />
-            <span className="font-medium hidden sm:inline">Filtrer :</span>
+        <div className="max-w-6xl mx-auto px-4 py-3 space-y-2">
+          {/* Ligne 1 : icône + niveaux + vue */}
+          <div className="flex items-center gap-2">
+            <SlidersHorizontal className="w-4 h-4 text-gray-400 shrink-0" />
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-none flex-1 min-w-0 pb-0.5">
+              {[1, 2, 3].map((level) => (
+                <StrollerFilterButton
+                  key={level}
+                  level={level}
+                  active={selectedLevel === level}
+                  onClick={() => setSelectedLevel(selectedLevel === level ? null : level)}
+                />
+              ))}
+            </div>
+            <div className="shrink-0 flex items-center bg-gray-100 rounded-full p-1">
+              <button
+                onClick={() => setView('list')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                  view === 'list'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                <LayoutGrid className="w-4 h-4" />
+                <span className="hidden sm:inline">Liste</span>
+              </button>
+              <button
+                onClick={() => setView('map')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                  view === 'map'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                <Map className="w-4 h-4" />
+                <span className="hidden sm:inline">Carte</span>
+              </button>
+            </div>
           </div>
 
-          {[1, 2, 3].map((level) => (
-            <StrollerFilterButton
-              key={level}
-              level={level}
-              active={selectedLevel === level}
-              onClick={() => setSelectedLevel(selectedLevel === level ? null : level)}
-            />
-          ))}
-
+          {/* Ligne 2 : région */}
           <select
             value={selectedRegion}
             onChange={(e) => setSelectedRegion(e.target.value)}
-            className="text-sm border border-gray-200 rounded-full px-4 py-2 bg-white text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full sm:w-auto text-sm border border-gray-200 rounded-full px-4 py-2 bg-white text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             <option value="">Toutes les régions</option>
             {regions.map((r) => (
@@ -133,32 +159,6 @@ export default function HomePage() {
               </option>
             ))}
           </select>
-
-          {/* View toggle */}
-          <div className="ml-auto flex items-center bg-gray-100 rounded-full p-1">
-            <button
-              onClick={() => setView('list')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                view === 'list'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <LayoutGrid className="w-4 h-4" />
-              <span className="hidden sm:inline">Liste</span>
-            </button>
-            <button
-              onClick={() => setView('map')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                view === 'map'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <Map className="w-4 h-4" />
-              <span className="hidden sm:inline">Carte</span>
-            </button>
-          </div>
         </div>
       </section>
 

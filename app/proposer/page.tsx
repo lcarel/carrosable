@@ -221,7 +221,7 @@ export default function ProposerPage() {
           <fieldset className="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
             <legend className="text-lg font-bold text-gray-900 px-1">Caractéristiques</legend>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">
                   <Ruler className="inline w-3.5 h-3.5 mr-1" />
