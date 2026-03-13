@@ -41,6 +41,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               >
                 À propos
               </a>
+              <a
+                href="/proposer"
+                className="text-sm font-semibold px-4 py-1.5 rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors"
+              >
+                Proposer une balade
+              </a>
             </nav>
           </div>
         </header>

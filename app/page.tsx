@@ -235,6 +235,24 @@ export default function HomePage() {
         )}
       </section>
 
+      {/* CTA proposer une balade */}
+      <section className="max-w-6xl mx-auto px-4 py-10">
+        <div className="bg-gradient-to-br from-green-700 to-green-900 rounded-3xl p-8 text-center text-white">
+          <p className="text-3xl mb-3">🗺️</p>
+          <h2 className="text-xl font-bold mb-2">Vous connaissez une balade carrossable ?</h2>
+          <p className="text-green-100 text-sm mb-6 max-w-md mx-auto">
+            Partagez-la avec la communauté ! Remplissez le formulaire et nous l'ajouterons au site
+            après vérification.
+          </p>
+          <a
+            href="/proposer"
+            className="inline-block px-6 py-3 rounded-full bg-white text-green-800 font-bold text-sm hover:bg-green-50 transition-colors shadow-md"
+          >
+            Proposer une balade
+          </a>
+        </div>
+      </section>
+
       {/* About section */}
       <section id="about" className="bg-green-50 border-t border-green-100 py-16 px-4 mt-8">
         <div className="max-w-3xl mx-auto text-center">
