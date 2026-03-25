@@ -7,7 +7,7 @@ import { MapPin, Ruler, TrendingUp, Clock, Tag, Image, Navigation, CheckCircle, 
 const strollerLevels = [
   {
     value: 1 as const,
-    icon: '🛺',
+    icon: '🐣',
     label: 'Peu carrossable',
     desc: 'Sentiers avec obstacles, cailloux, forte pente. Poussette tout-terrain obligatoire.',
     color: 'border-red-300 bg-red-50 text-red-800',
@@ -15,7 +15,7 @@ const strollerLevels = [
   },
   {
     value: 2 as const,
-    icon: '🛺🛺',
+    icon: '🐣🐣',
     label: 'Carrossable',
     desc: 'Chemin en terre ou stabilisé. Poussette robuste conseillée. Quelques passages délicats.',
     color: 'border-amber-300 bg-amber-50 text-amber-800',
@@ -23,7 +23,7 @@ const strollerLevels = [
   },
   {
     value: 3 as const,
-    icon: '🛺🛺🛺',
+    icon: '🐣🐣🐣',
     label: 'Très carrossable',
     desc: 'Chemin asphalté, piste cyclable ou allée large et lisse. Toutes les poussettes passent.',
     color: 'border-green-300 bg-green-50 text-green-800',

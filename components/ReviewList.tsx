@@ -58,7 +58,7 @@ export default function ReviewList({ reviews }: ReviewListProps) {
                 <span className="font-semibold text-gray-900">{review.author}</span>
               </div>
               {review.strollerType && (
-                <span className="text-xs text-gray-500 ml-10">🛺 {review.strollerType}</span>
+                <span className="text-xs text-gray-500 ml-10">🐣 {review.strollerType}</span>
               )}
             </div>
             <div className="flex flex-col items-end gap-1">

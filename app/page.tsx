@@ -44,7 +44,7 @@ function StrollerFilterButton({
           : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
       }`}
     >
-      <span>{'🛺'.repeat(level)}</span>
+      <span>{'🐣'.repeat(level)}</span>
       <span className="hidden sm:inline">{levelLabels[level]}</span>
     </button>
   )
@@ -85,7 +85,7 @@ export default function HomePage() {
       {/* Hero */}
       <section className="bg-gradient-to-br from-green-700 to-green-900 text-white py-16 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="text-5xl mb-4">🛺</p>
+          <p className="text-5xl mb-4">🐣</p>
           <h1 className="text-4xl font-bold mb-3">Balades adaptées aux poussettes</h1>
           <p className="text-green-100 text-lg mb-8">
             Découvrez et partagez les meilleures randonnées carrossables pour profiter de la
@@ -262,19 +262,19 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8 text-left">
             {[
               {
-                icon: '🛺',
+                icon: '🐣',
                 title: 'Peu carrossable',
                 desc: 'Sentiers avec obstacles, cailloux, forte pente. Poussette tout-terrain obligatoire et effort physique important.',
                 color: 'border-red-200 bg-red-50',
               },
               {
-                icon: '🛺🛺',
+                icon: '🐣🐣',
                 title: 'Carrossable',
                 desc: 'Chemin en terre ou stabilisé. Poussette robuste conseillée. Quelques passages délicats mais praticable.',
                 color: 'border-amber-200 bg-amber-50',
               },
               {
-                icon: '🛺🛺🛺',
+                icon: '🐣🐣🐣',
                 title: 'Très carrossable',
                 desc: 'Chemin asphalté, piste cyclable ou allée large et lisse. Toutes les poussettes passent sans difficulté.',
                 color: 'border-green-200 bg-green-50',

@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
           <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between relative">
             <a href="/" className="flex items-center gap-2 group">
-              <span className="text-2xl">🛺</span>
+              <span className="text-2xl">🐣</span>
               <div>
                 <span className="text-xl font-bold text-green-700 group-hover:text-green-600 transition-colors">
                   Carrossable
@@ -58,7 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="bg-white border-t border-gray-200 mt-16">
           <div className="max-w-6xl mx-auto px-4 py-8 text-center">
             <p className="text-gray-500 text-sm">
-              🛺 <strong>Carrossable</strong> — Partagez les balades adaptées aux familles
+              🐣 <strong>Carrossable</strong> — Partagez les balades adaptées aux familles
             </p>
             <p className="text-gray-400 text-xs mt-1">
               Fait avec ❤️ pour tous les parents aventuriers
