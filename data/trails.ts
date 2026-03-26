@@ -2,19 +2,19 @@ import { Trail } from '@/types'
 
 export const trails: Trail[] = [
   {
-    id: 'promenade-lac-annecy',
-    name: 'Tour du lac d\'Annecy',
-    location: 'Annecy',
-    region: 'Auvergne-Rhône-Alpes',
+    id: 'parc-borely-marseille',
+    name: 'Parc Borely',
+    location: 'Marseille',
+    region: 'Bouches-du-Rhône',
     description:
-      'Le tour du lac d\'Annecy est une balade emblématique sur une piste cyclable et piétonne entièrement asphaltée. Idéale pour les poussettes et poussettes sportives, ce parcours longe les rives du plus beau lac des Alpes avec des panoramas exceptionnels à chaque tournant.',
-    distance: 22,
-    elevation: 80,
-    duration: '5h00',
+      'Situé dans le 8ème arrondissement de Marseille, juste à côté de l’hippodrome et des plages du Prado, le Parc Borély nous charme avec ses bassins, ses nombreuses sculptures et ses différents jardins. Il est l’endroit parfait pour pique-niquer, faire son sport ou tout simplement se détendre au soleil.',
+    distance: 1,
+    elevation: 0,
+    duration: '1h00',
     strollerLevel: 3,
-    tags: ['lac', 'asphalte', 'panorama', 'cyclable'],
-    imageUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
-    coordinates: { lat: 45.8992, lng: 6.1294 },
+    tags: ['parc', 'chemin', 'vert', 'cyclable'],
+    imageUrl: '/images/parc-borely-image.jpg',
+    coordinates: { lat: 43.26099, lng: 5.38092 },
   },
   {
     id: 'foret-de-fontainebleau',
