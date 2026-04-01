@@ -1,156 +1,215 @@
 import { Trail } from '@/types'
 
 export const trails: Trail[] = [
-  {
-    id: 'parc-borely-marseille',
-    name: 'Parc Borely',
-    location: 'Marseille',
-    region: 'Bouches-du-Rhône',
-    description:
-      'Situé dans le 8ème arrondissement de Marseille, juste à côté de l’hippodrome et des plages du Prado, le Parc Borély nous charme avec ses bassins, ses nombreuses sculptures et ses différents jardins. Il est l’endroit parfait pour pique-niquer, faire son sport ou tout simplement se détendre au soleil.',
-    distance: 1,
-    elevation: 0,
-    duration: '1h00',
-    strollerLevel: 3,
-    tags: ['parc', 'chemin', 'vert', 'cyclable'],
-    imageUrl: '/images/parc-borely-image.jpg',
-    coordinates: { lat: 43.26099, lng: 5.38092 },
+{
+  id: 'parc-borely-marseille',
+  name: 'Parc Borély',
+  location: 'Marseille',
+  region: 'Bouches-du-Rhône',
+  description:
+    'Le parc Borély est un vaste parc paysager de Marseille avec de larges allées asphaltées ' +
+    'idéales pour toutes les poussettes. Autour du lac central, on profite de pelouses ombragées, ' +
+    'd\'aires de jeux et d\'une buvette. Un incontournable pour les familles marseillaises.',
+  distance: 3,
+  elevation: 10,
+  duration: '1h00',
+  strollerLevel: 3,
+  tags: ['parc', 'asphalte', 'plat', 'urbain', 'lac', 'aire de jeux', 'ombragé'],
+  imageUrl: 'https://images.unsplash.com/photo-1588392382834-a891154bca4d?w=800',
+  coordinates: {
+    lat: 43.2601,
+    lng: 5.3797,
   },
-  {
-    id: 'foret-de-fontainebleau',
-    name: 'Sentier des gorges de Fontainebleau',
-    location: 'Fontainebleau',
-    region: 'Île-de-France',
-    description:
-      'Un sentier balisé à travers la magnifique forêt de Fontainebleau. Le chemin emprunté est majoritairement sableux avec quelques passages rocheux. Convient aux poussettes tout-terrain, mais peut être difficile avec une poussette standard après la pluie.',
-    distance: 8,
-    elevation: 120,
-    duration: '2h30',
-    strollerLevel: 1,
-    tags: ['forêt', 'sable', 'rochers', 'nature'],
-    imageUrl: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=800',
-    coordinates: { lat: 48.4049, lng: 2.7027 },
+},
+
+{
+  id: 'corniche-kennedy-marseille',
+  name: 'Corniche Kennedy',
+  location: 'Marseille',
+  region: 'Bouches-du-Rhône',
+  description:
+    'La célèbre corniche de Marseille longe la mer sur plusieurs kilomètres avec une promenade ' +
+    'asphaltée et des vues spectaculaires sur la Méditerranée. Nombreuses plages accessibles ' +
+    'le long du parcours. Idéal en début de matinée pour éviter l\'affluence.',
+  distance: 5,
+  elevation: 20,
+  duration: '1h30',
+  strollerLevel: 3,
+  tags: ['mer', 'asphalte', 'plat', 'urbain', 'vue mer', 'plages'],
+  imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800',
+  coordinates: {
+    lat: 43.2750,
+    lng: 5.3530,
   },
-  {
-    id: 'voie-verte-alsace',
-    name: 'Voie Verte d\'Alsace',
-    location: 'Colmar',
-    region: 'Grand Est',
-    description:
-      'Ancienne voie ferrée reconvertie en piste verte, cette route asphaltée traverse les vignobles alsaciens. Parfaitement plane avec une surface impeccable, idéale même pour les petites poussettes citadines. Villages pittoresques tout au long du parcours.',
-    distance: 15,
-    elevation: 30,
-    duration: '3h30',
-    strollerLevel: 3,
-    tags: ['vignobles', 'asphalte', 'plat', 'villages'],
-    imageUrl: 'https://images.unsplash.com/photo-1467226632440-65f0b4957563?w=800',
-    coordinates: { lat: 48.0793, lng: 7.3585 },
+},
+
+{
+  id: 'fort-saint-jean-mucem-marseille',
+  name: 'Fort Saint-Jean & MuCEM',
+  location: 'Marseille',
+  region: 'Bouches-du-Rhône',
+  description:
+    'Une balade urbaine et culturelle sur les passerelles et jardins du Fort Saint-Jean, ' +
+    'entièrement accessible aux poussettes. Vue imprenable sur le MuCEM, la cathédrale de la Major ' +
+    'et le Vieux-Port. Entrée gratuite pour le fort et les jardins.',
+  distance: 2,
+  elevation: 15,
+  duration: '0h45',
+  strollerLevel: 3,
+  tags: ['urbain', 'patrimoine', 'asphalte', 'vue mer', 'gratuit', 'culturel'],
+  imageUrl: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=800',
+  coordinates: {
+    lat: 43.2964,
+    lng: 5.3613,
   },
-  {
-    id: 'parc-des-buttes-chaumont',
-    name: 'Boucle du Parc des Buttes-Chaumont',
-    location: 'Paris 19e',
-    region: 'Île-de-France',
-    description:
-      'Le plus sauvage des parcs parisiens offre une belle boucle sur chemins pavés et allées. Quelques montées mais le revêtement est excellent. Le tour du lac central avec vue sur le temple de la Sibylle est incontournable.',
-    distance: 3,
-    elevation: 50,
-    duration: '1h00',
-    strollerLevel: 2,
-    tags: ['parc', 'lac', 'urbain', 'pavé'],
-    imageUrl: 'https://images.unsplash.com/photo-1549144511-f099e773c147?w=800',
-    coordinates: { lat: 48.8777, lng: 2.3823 },
+},
+
+{
+  id: 'parc-longchamp-marseille',
+  name: 'Parc Longchamp',
+  location: 'Marseille',
+  region: 'Bouches-du-Rhône',
+  description:
+    'Promenade autour de la majestueuse fontaine de Longchamp, construite pour célébrer l\'arrivée ' +
+    'de l\'eau à Marseille. Allées larges et ombragées, jardin botanique, musées et aire de jeux. ' +
+    'Un poumon vert en plein cœur de la ville, parfait pour une sortie tranquille.',
+  distance: 2,
+  elevation: 10,
+  duration: '0h45',
+  strollerLevel: 3,
+  tags: ['parc', 'asphalte', 'ombragé', 'urbain', 'jardin botanique', 'aire de jeux'],
+  imageUrl: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800',
+  coordinates: {
+    lat: 43.3037,
+    lng: 5.3964,
   },
-  {
-    id: 'mont-saint-michel-digue',
-    name: 'Digue du Mont-Saint-Michel',
-    location: 'Mont-Saint-Michel',
-    region: 'Normandie',
-    description:
-      'La route reliant le continent au Mont-Saint-Michel est entièrement praticable en poussette. La nouvelle passerelle piétonne offre des vues spectaculaires sur la baie. Attention aux horaires des marées pour profiter du spectacle.',
-    distance: 4,
-    elevation: 5,
-    duration: '1h30',
-    strollerLevel: 3,
-    tags: ['patrimoine', 'mer', 'asphalte', 'maree'],
-    imageUrl: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800',
-    coordinates: { lat: 48.6359, lng: -1.5114 },
+},
+
+{
+  id: 'marais-du-vigueirat-camargue',
+  name: 'Sentier des Marais du Vigueirat',
+  location: 'Arles',
+  region: 'Bouches-du-Rhône',
+  description:
+    'Le sentier de la Palunette traverse les marais camarguais sur un chemin plat et stabilisé, ' +
+    'avec des abris d\'observation de la faune tout au long du parcours. Flamants roses, hérons et ' +
+    'chevaux camarguais sont au rendez-vous. Dénivelé nul, idéal avec une poussette tout-terrain.',
+  distance: 2,
+  elevation: 0,
+  duration: '1h00',
+  strollerLevel: 2,
+  tags: ['nature', 'marais', 'faune', 'Camargue', 'plat', 'oiseaux', 'observation'],
+  imageUrl: 'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=800',
+  coordinates: {
+    lat: 43.5270,
+    lng: 4.7080,
   },
-  {
-    id: 'gorges-du-verdon',
-    name: 'Sentier du Couloir Samson',
-    location: 'Gorges du Verdon',
-    region: "Provence-Alpes-Côte d'Azur",
-    description:
-      'Un sentier sauvage au cœur des gorges du Verdon. Le chemin est étroit, caillouteux et parfois escarpé. Réservé aux poussettes tout-terrain robustes avec un parent en bonne forme physique. Paysages époustouflants mais parcours exigeant.',
-    distance: 6,
-    elevation: 350,
-    duration: '3h00',
-    strollerLevel: 1,
-    tags: ['gorges', 'cailloux', 'dénivelé', 'montagne'],
-    imageUrl: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800',
-    coordinates: { lat: 43.7372, lng: 6.3581 },
+},
+
+{
+  id: 'grand-parc-figuerolles-martigues',
+  name: 'Grand Parc de Figuerolles',
+  location: 'Martigues',
+  region: 'Bouches-du-Rhône',
+  description:
+    'Vaste parc de 130 hectares longeant les rives de l\'Étang de Berre, avec un sentier nature, ' +
+    'une ferme pédagogique et un sentier botanique. Chemins larges et bien entretenus, accessibles ' +
+    'aux poussettes robustes. Un cadre méditerranéen verdoyant à deux pas de Martigues.',
+  distance: 4,
+  elevation: 30,
+  duration: '1h15',
+  strollerLevel: 2,
+  tags: ['nature', 'étang', 'ferme pédagogique', 'botanique', 'méditerranéen', 'famille'],
+  imageUrl: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=800',
+  coordinates: {
+    lat: 43.4080,
+    lng: 5.0520,
   },
-  {
-    id: 'promenade-des-anglais',
-    name: 'Promenade des Anglais',
-    location: 'Nice',
-    region: "Provence-Alpes-Côte d'Azur",
-    description:
-      'L\'iconique promenade niçoise longeant la mer sur 7 km. Surface parfaitement asphaltée, large trottoir dédié aux piétons. Idéale en toutes saisons. Possibilité de s\'arrêter dans les nombreux cafés tout au long du parcours.',
-    distance: 7,
-    elevation: 5,
-    duration: '1h45',
-    strollerLevel: 3,
-    tags: ['mer', 'asphalte', 'plat', 'urbain', 'mer-méditerranée'],
-    imageUrl: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=800',
-    coordinates: { lat: 43.6955, lng: 7.2653 },
+},
+
+{
+  id: 'barrages-bimont-zola-aix',
+  name: 'Barrages de Bimont et Zola',
+  location: 'Aix-en-Provence',
+  region: 'Bouches-du-Rhône',
+  description:
+    'Belle balade forestière au pied de la Sainte-Victoire reliant les deux barrages historiques : ' +
+    'le barrage de Bimont et le lac de Zola, conçu par le père de l\'écrivain Émile Zola. ' +
+    'Chemin ombragé en forêt de pins, idéal avec une poussette tout-terrain.',
+  distance: 5,
+  elevation: 60,
+  duration: '1h30',
+  strollerLevel: 2,
+  tags: ['forêt', 'lac', 'patrimoine', 'ombragé', 'Sainte-Victoire', 'pins'],
+  imageUrl: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800',
+  coordinates: {
+    lat: 43.5340,
+    lng: 5.5610,
   },
-  {
-    id: 'canal-du-midi',
-    name: 'Chemin de Halage du Canal du Midi',
-    location: 'Toulouse',
-    region: 'Occitanie',
-    description:
-      'Les berges ombragées du Canal du Midi offrent un chemin de halage en stabilisé compact. Le sol est généralement bon mais peut devenir boueux après la pluie. Les platanes centenaires créent un tunnel verdoyant magnifique.',
-    distance: 12,
-    elevation: 15,
-    duration: '3h00',
-    strollerLevel: 2,
-    tags: ['canal', 'ombragé', 'plat', 'patrimoine-unesco'],
-    imageUrl: 'https://images.unsplash.com/photo-1513002749550-c59d786b8e6c?w=800',
-    coordinates: { lat: 43.6047, lng: 1.4442 },
+},
+
+{
+  id: 'parc-poudrerie-saint-chamas',
+  name: 'Parc de la Poudrerie Royale',
+  location: 'Saint-Chamas',
+  region: 'Bouches-du-Rhône',
+  description:
+    'Ancienne Poudrerie royale reconvertie en parc naturel de 118 hectares, avec plusieurs ' +
+    'itinéraires balisés sur des allées larges et planes. Un cadre verdoyant et insolite, mélange ' +
+    'd\'histoire industrielle et de nature reconquise. Très accessible pour les poussettes.',
+  distance: 4,
+  elevation: 15,
+  duration: '1h15',
+  strollerLevel: 3,
+  tags: ['parc', 'nature', 'histoire', 'allées larges', 'plat', 'insolite'],
+  imageUrl: 'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?w=800',
+  coordinates: {
+    lat: 43.5490,
+    lng: 5.0330,
   },
-  {
-    id: 'vallee-de-la-vezere',
-    name: 'Sentier des Falaises de la Vézère',
-    location: 'Les Eyzies',
-    region: 'Nouvelle-Aquitaine',
-    description:
-      'Un sentier entre falaises et rivière dans la vallée de la préhistoire. Le chemin en terre battue est praticable avec une poussette tout-terrain. Passages en sous-bois agréables. Sites préhistoriques visibles depuis le sentier.',
-    distance: 5,
-    elevation: 80,
-    duration: '1h45',
-    strollerLevel: 2,
-    tags: ['rivière', 'falaises', 'préhistoire', 'sous-bois'],
-    imageUrl: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800',
-    coordinates: { lat: 44.9365, lng: 1.0147 },
+},
+
+{
+  id: 'arles-centre-historique',
+  name: 'Arles — Balade dans la cité romaine',
+  location: 'Arles',
+  region: 'Bouches-du-Rhône',
+  description:
+    'Arles est une ville entièrement plate, idéale à explorer en poussette. Le circuit du ' +
+    'centre historique passe par les Arènes, les Alyscamps, le théâtre antique et les bords ' +
+    'du Rhône. Ruelles pavées en partie, prévoir une poussette robuste pour les passages en galets.',
+  distance: 4,
+  elevation: 5,
+  duration: '1h30',
+  strollerLevel: 2,
+  tags: ['urbain', 'patrimoine', 'romain', 'plat', 'fleuve', 'culturel', 'histoire'],
+  imageUrl: 'https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?w=800',
+  coordinates: {
+    lat: 43.6767,
+    lng: 4.6278,
   },
-  {
-    id: 'balade-marais-poitevin',
-    name: 'Balade en barque du Marais Poitevin',
-    location: 'Coulon',
-    region: 'Nouvelle-Aquitaine',
-    description:
-      'Le chemin de halage du Marais Poitevin longe les canaux dans la Venise Verte. Surface en herbe tondue et stabilisé, praticable en poussette tout-terrain. La végétation luxuriante et les reflets sur l\'eau créent une atmosphère féerique.',
-    distance: 4,
-    elevation: 5,
-    duration: '1h15',
-    strollerLevel: 2,
-    tags: ['marais', 'canaux', 'herbe', 'nature-préservée'],
-    imageUrl: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800',
-    coordinates: { lat: 46.3174, lng: -0.5789 },
+},
+
+{
+  id: 'salon-de-provence-centre',
+  name: 'Salon-de-Provence — Vieille ville',
+  location: 'Salon-de-Provence',
+  region: 'Bouches-du-Rhône',
+  description:
+    'Découverte du centre historique de Salon-de-Provence avec ses places ombragées, ses fontaines, ' +
+    'la Tour de l\'Horloge et la tombe de Nostradamus. Les rues principales sont larges et ' +
+    'accessibles, avec quelques ruelles pavées. Douceur de vivre provençale garantie.',
+  distance: 3,
+  elevation: 20,
+  duration: '1h00',
+  strollerLevel: 2,
+  tags: ['urbain', 'patrimoine', 'provençal', 'fontaines', 'histoire', 'Nostradamus'],
+  imageUrl: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800',
+  coordinates: {
+    lat: 43.6397,
+    lng: 5.0975,
   },
+},
 ]
 
 export function getTrailById(id: string): Trail | undefined {
