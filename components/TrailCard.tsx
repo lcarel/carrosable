@@ -24,47 +24,17 @@ export default function TrailCard({ trail, avgRating = 0, reviewCount = 0, voteC
         transition: 'transform .2s ease, border-color .2s ease, box-shadow .2s ease',
       }}
     >
-      {/* Media area — neutral striped pattern */}
-      <div
-        className="striped relative"
-        style={{ aspectRatio: '4/3', borderBottom: '1px solid var(--line)' }}
-      >
-        {/* Rating badge */}
-        <div
-          className="absolute bottom-3 left-3 flex items-center gap-1.5"
-          style={{
-            background: 'rgba(255,255,255,.95)',
-            border: '1px solid var(--line)',
-            borderRadius: 999,
-            padding: '5px 10px',
-            fontSize: 12,
-            fontWeight: 600,
-            color: 'var(--accent-ink)',
-          }}
-        >
-          <StrollerBadge level={trail.strollerLevel} showLabel={true} />
-        </div>
-
-        {voteCount > 0 && (
-          <div
-            className="absolute top-3 right-3"
-            style={{
-              background: 'rgba(255,255,255,.92)',
-              border: '1px solid var(--line)',
-              borderRadius: 999,
-              padding: '4px 10px',
-              fontSize: 12,
-              fontWeight: 600,
-              color: 'var(--ink-2)',
-            }}
-          >
-            👍 {voteCount}
-          </div>
-        )}
-      </div>
-
       {/* Card body */}
       <div style={{ padding: '18px 18px 20px', display: 'flex', flexDirection: 'column', gap: 10, flex: 1 }}>
+        {/* Badge row */}
+        <div className="flex items-center justify-between">
+          <StrollerBadge level={trail.strollerLevel} showLabel={true} />
+          {voteCount > 0 && (
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-3)' }}>
+              👍 {voteCount}
+            </span>
+          )}
+        </div>
         {/* Location */}
         <div className="flex items-center gap-1.5" style={{ fontSize: 12, color: 'var(--ink-3)', fontWeight: 500, letterSpacing: '.01em', textTransform: 'uppercase' }}>
           <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--ink-4)', flexShrink: 0 }}>

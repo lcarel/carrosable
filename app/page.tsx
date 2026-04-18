@@ -27,46 +27,6 @@ const levelLabels: Record<number, string> = {
 
 const regions = Array.from(new Set(trails.map((t) => t.region))).sort()
 
-/* ── Hero visual overlay chip ─────────────────────────────── */
-function HeroVisual() {
-  const featured = trails[0]
-  return (
-    <aside
-      className="striped relative hidden md:block"
-      style={{
-        aspectRatio: '5/6',
-        borderRadius: 20,
-        overflow: 'hidden',
-        border: '1px solid var(--line)',
-      }}
-    >
-      {/* overlay chip */}
-      {featured && (
-        <div
-          className="absolute bottom-4 left-4 right-4 flex items-center gap-3"
-          style={{
-            background: 'rgba(255,255,255,.92)',
-            backdropFilter: 'blur(6px)',
-            border: '1px solid var(--line)',
-            padding: '14px 16px',
-            borderRadius: 14,
-          }}
-        >
-          <div className="flex-1 min-w-0">
-            <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {featured.name}
-            </div>
-            <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 2 }}>
-              {featured.location} · {featured.distance} km · {featured.duration}
-            </div>
-          </div>
-          <PramMeter level={featured.strollerLevel} size={16} />
-        </div>
-      )}
-    </aside>
-  )
-}
-
 /* ── Filter chip ──────────────────────────────────────────── */
 function LevelChip({ level, active, onClick }: { level: number; active: boolean; onClick: () => void }) {
   return (
@@ -121,10 +81,7 @@ export default function HomePage() {
       {/* ── HERO ─────────────────────────────────────────── */}
       <section style={{ padding: '72px 0 56px' }}>
         <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 32px' }}>
-          <div
-            className="grid gap-14 items-center"
-            style={{ gridTemplateColumns: '1.05fr .95fr' }}
-          >
+          <div style={{ maxWidth: 680 }}>
             <div>
               {/* Eyebrow */}
               <span
@@ -231,8 +188,6 @@ export default function HomePage() {
                 ))}
               </div>
             </div>
-
-            <HeroVisual />
           </div>
         </div>
       </section>

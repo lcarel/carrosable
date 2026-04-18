@@ -138,29 +138,6 @@ export default function TrailPage({ params }: PageProps) {
         </div>
       </header>
 
-      {/* Hero — striped 21:9 */}
-      <div
-        style={{
-          width: '100%',
-          aspectRatio: '21/9',
-          borderRadius: 16,
-          overflow: 'hidden',
-          marginBottom: 36,
-          background: 'repeating-linear-gradient(135deg,#edeee7 0 12px,#f4f5ef 12px 24px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          border: '1px solid var(--line)',
-        }}
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, opacity: 0.4 }}>
-          <Icon id="i-pram" size={36} />
-          <span style={{ fontSize: 12, letterSpacing: '.06em', textTransform: 'uppercase', fontWeight: 500 }}>
-            {trail.location}
-          </span>
-        </div>
-      </div>
-
       {/* 2-column layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
@@ -289,22 +266,6 @@ export default function TrailPage({ params }: PageProps) {
                       transition: 'border-color .15s',
                     }}
                   >
-                    {/* Mini striped thumb */}
-                    <div
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 8,
-                        flexShrink: 0,
-                        background: 'repeating-linear-gradient(135deg,#edeee7 0 6px,#f4f5ef 6px 12px)',
-                        border: '1px solid var(--line)',
-                        display: 'grid',
-                        placeItems: 'center',
-                        color: 'var(--ink-4)',
-                      }}
-                    >
-                      <Icon id="i-pram" size={16} />
-                    </div>
                     <div style={{ minWidth: 0, flex: 1 }}>
                       <p
                         style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
