@@ -1,12 +1,19 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ThumbsUp, ThumbsDown } from 'lucide-react'
 import { getSessionId } from '@/lib/supabase'
 import { fetchVoteCounts, fetchUserVote, upsertVote } from '@/lib/votesApi'
 
 interface VoteButtonProps {
   trailId: string
+}
+
+function Icon({ id, size = 16 }: { id: string; size?: number }) {
+  return (
+    <svg width={size} height={size} fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+      <use href={`#${id}`} />
+    </svg>
+  )
 }
 
 export default function VoteButton({ trailId }: VoteButtonProps) {
@@ -17,9 +24,9 @@ export default function VoteButton({ trailId }: VoteButtonProps) {
   useEffect(() => {
     const sessionId = getSessionId()
     Promise.all([fetchVoteCounts(trailId), fetchUserVote(trailId, sessionId)])
-      .then(([counts, userVote]) => {
+      .then(([counts, vote]) => {
         setVotes(counts)
-        setUserVote(userVote)
+        setUserVote(vote)
       })
       .catch(console.error)
       .finally(() => setLoading(false))
@@ -29,7 +36,6 @@ export default function VoteButton({ trailId }: VoteButtonProps) {
     const sessionId = getSessionId()
     const newVote = userVote === value ? null : value
 
-    // Optimistic update
     const newCounts = { ...votes }
     if (userVote === 1) newCounts.up = Math.max(0, newCounts.up - 1)
     if (userVote === -1) newCounts.down = Math.max(0, newCounts.down - 1)
@@ -41,48 +47,96 @@ export default function VoteButton({ trailId }: VoteButtonProps) {
     try {
       await upsertVote(trailId, sessionId, newVote)
     } catch (err) {
-      // Rollback on error
       console.error(err)
       setVotes(votes)
       setUserVote(userVote)
     }
   }
 
-  const score = votes.up - votes.down
-
   return (
-    <div className="flex items-center gap-2">
-      <button
-        onClick={() => handleVote(1)}
-        disabled={loading}
-        className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 font-semibold text-sm transition-all disabled:opacity-50 ${
-          userVote === 1
-            ? 'bg-green-500 border-green-500 text-white shadow-md scale-105'
-            : 'bg-white border-gray-200 text-gray-600 hover:border-green-400 hover:text-green-600'
-        }`}
-      >
-        <ThumbsUp className="w-4 h-4" />
-        <span>{votes.up > 0 ? `${votes.up} · ` : ''}Utile</span>
-      </button>
-
-      {score !== 0 && (
-        <span className={`text-sm font-bold ${score > 0 ? 'text-green-600' : 'text-red-500'}`}>
-          {score > 0 ? `+${score}` : score}
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 16,
+        flexWrap: 'wrap',
+      }}
+    >
+      {/* LHS */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+        <span
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 10,
+            background: 'var(--accent-soft)',
+            display: 'grid',
+            placeItems: 'center',
+            color: 'var(--accent)',
+            flexShrink: 0,
+          }}
+        >
+          <Icon id="i-thumb-up" size={18} />
         </span>
-      )}
+        <div>
+          <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--ink)', lineHeight: 1.3 }}>
+            Cette balade vous a été utile ?
+          </div>
+          <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 2 }}>
+            Aidez les autres parents en partageant votre retour rapide.
+          </div>
+        </div>
+      </div>
 
-      <button
-        onClick={() => handleVote(-1)}
-        disabled={loading}
-        className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 font-semibold text-sm transition-all disabled:opacity-50 ${
-          userVote === -1
-            ? 'bg-red-500 border-red-500 text-white shadow-md scale-105'
-            : 'bg-white border-gray-200 text-gray-600 hover:border-red-400 hover:text-red-500'
-        }`}
-      >
-        <ThumbsDown className="w-4 h-4" />
-        <span>Pas utile</span>
-      </button>
+      {/* RHS */}
+      <div style={{ display: 'flex', gap: 8 }}>
+        <button
+          onClick={() => handleVote(1)}
+          disabled={loading}
+          style={{
+            padding: '9px 16px',
+            borderRadius: 999,
+            border: `1.5px solid ${userVote === 1 ? 'var(--accent)' : 'var(--line)'}`,
+            background: userVote === 1 ? 'var(--accent)' : 'var(--surface)',
+            color: userVote === 1 ? '#fff' : 'var(--ink-2)',
+            fontWeight: 600,
+            fontSize: 13,
+            cursor: loading ? 'default' : 'pointer',
+            opacity: loading ? 0.6 : 1,
+            transition: 'all .15s',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+          }}
+        >
+          <Icon id="i-thumb-up" size={14} />
+          Utile{votes.up > 0 ? ` · ${votes.up}` : ''}
+        </button>
+
+        <button
+          onClick={() => handleVote(-1)}
+          disabled={loading}
+          style={{
+            padding: '9px 16px',
+            borderRadius: 999,
+            border: `1.5px solid ${userVote === -1 ? '#c0392b' : 'var(--line)'}`,
+            background: userVote === -1 ? '#c0392b' : 'var(--surface)',
+            color: userVote === -1 ? '#fff' : 'var(--ink-3)',
+            fontWeight: 500,
+            fontSize: 13,
+            cursor: loading ? 'default' : 'pointer',
+            opacity: loading ? 0.6 : 1,
+            transition: 'all .15s',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+          }}
+        >
+          <Icon id="i-thumb-down" size={14} />
+          Pas utile{votes.down > 0 ? ` · ${votes.down}` : ''}
+        </button>
+      </div>
     </div>
   )
 }

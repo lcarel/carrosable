@@ -1,74 +1,164 @@
 import { Review } from '@/types'
-import StarRating from './StarRating'
 
 interface ReviewListProps {
   reviews: Review[]
 }
 
+function Icon({ id, size = 14 }: { id: string; size?: number }) {
+  return (
+    <svg width={size} height={size} fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+      <use href={`#${id}`} />
+    </svg>
+  )
+}
+
+function StarBar({ value, total }: { value: number; total: number }) {
+  const pct = total > 0 ? (value / total) * 100 : 0
+  return (
+    <div style={{ flex: 1, height: 4, borderRadius: 999, background: 'var(--line-2)', overflow: 'hidden' }}>
+      <div style={{ height: '100%', width: `${pct}%`, background: '#f5a623', borderRadius: 999 }} />
+    </div>
+  )
+}
+
+function Stars({ value, size = 13 }: { value: number; size?: number }) {
+  return (
+    <span style={{ display: 'inline-flex', gap: 1 }}>
+      {[1, 2, 3, 4, 5].map((i) => (
+        <svg key={i} width={size} height={size} viewBox="0 0 24 24" fill={i <= value ? '#f5a623' : 'none'} stroke="#f5a623" strokeWidth={1.5}>
+          <use href="#i-star" />
+        </svg>
+      ))}
+    </span>
+  )
+}
+
+const strollerIconMap: Record<string, string> = {
+  'Poussette citadine': 'i-stroller-narrow',
+  'Poussette tout-terrain': 'i-stroller-wide',
+  'Poussette sport / jogging': 'i-stroller-wide',
+  'Poussette double': 'i-stroller-wide',
+  'Tricycle enfant': 'i-pram',
+  'Autre': 'i-pram',
+}
+
 export default function ReviewList({ reviews }: ReviewListProps) {
   if (reviews.length === 0) {
     return (
-      <div className="text-center py-10 text-gray-400">
-        <p className="text-4xl mb-3">💬</p>
-        <p className="font-medium">Aucun avis pour le moment</p>
-        <p className="text-sm mt-1">Soyez le premier à partager votre expérience !</p>
+      <div
+        style={{
+          textAlign: 'center',
+          padding: '40px 20px',
+          color: 'var(--ink-4)',
+          border: '1px dashed var(--line)',
+          borderRadius: 14,
+        }}
+      >
+        <div style={{ marginBottom: 10, color: 'var(--ink-3)' }}>
+          <Icon id="i-chat" size={28} />
+        </div>
+        <p style={{ fontWeight: 500, fontSize: 14, color: 'var(--ink-3)', margin: 0 }}>Aucun avis pour le moment</p>
+        <p style={{ fontSize: 13, color: 'var(--ink-4)', marginTop: 4 }}>Soyez le premier à partager votre expérience !</p>
       </div>
     )
   }
 
-  const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+  const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-4 pb-4 border-b border-gray-100">
-        <div className="text-center">
-          <p className="text-4xl font-bold text-gray-900">{avgRating.toFixed(1)}</p>
-          <StarRating value={Math.round(avgRating)} readonly size="sm" />
-          <p className="text-xs text-gray-500 mt-1">{reviews.length} avis</p>
+    <div>
+      {/* Summary card */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 24,
+          background: 'var(--surface)',
+          border: '1px solid var(--line)',
+          borderRadius: 14,
+          padding: '18px 20px',
+          marginBottom: 20,
+        }}
+      >
+        <div style={{ textAlign: 'center', flexShrink: 0 }}>
+          <div style={{ fontSize: 36, fontWeight: 700, letterSpacing: '-.03em', color: 'var(--ink)', lineHeight: 1 }}>
+            {avg.toFixed(1)}
+          </div>
+          <div style={{ marginTop: 6 }}>
+            <Stars value={Math.round(avg)} />
+          </div>
+          <div style={{ fontSize: 12, color: 'var(--ink-4)', marginTop: 4 }}>{reviews.length} avis</div>
         </div>
-        <div className="flex-1">
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
           {[5, 4, 3, 2, 1].map((star) => {
             const count = reviews.filter((r) => r.rating === star).length
-            const pct = reviews.length > 0 ? (count / reviews.length) * 100 : 0
             return (
-              <div key={star} className="flex items-center gap-2 mb-1">
-                <span className="text-xs text-gray-500 w-4 text-right">{star}</span>
-                <span className="text-amber-400 text-xs">★</span>
-                <div className="flex-1 bg-gray-200 rounded-full h-1.5 overflow-hidden">
-                  <div
-                    className="bg-amber-400 h-1.5 rounded-full transition-all"
-                    style={{ width: `${pct}%` }}
-                  />
-                </div>
-                <span className="text-xs text-gray-400 w-5">{count}</span>
+              <div key={star} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: 12, color: 'var(--ink-3)', width: 8, textAlign: 'right' }}>{star}</span>
+                <svg width={11} height={11} viewBox="0 0 24 24" fill="#f5a623" stroke="#f5a623" strokeWidth={1.5}>
+                  <use href="#i-star" />
+                </svg>
+                <StarBar value={count} total={reviews.length} />
+                <span style={{ fontSize: 12, color: 'var(--ink-4)', width: 18 }}>{count}</span>
               </div>
             )
           })}
         </div>
       </div>
 
-      {reviews.map((review) => (
-        <div key={review.id} className="bg-white rounded-xl border border-gray-100 p-4">
-          <div className="flex items-start justify-between mb-2">
-            <div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold text-sm">
+      {/* Review items */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {reviews.map((review) => (
+          <div
+            key={review.id}
+            style={{
+              background: 'var(--surface)',
+              border: '1px solid var(--line)',
+              borderRadius: 14,
+              padding: '16px 18px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 10 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                {/* Avatar */}
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: '50%',
+                    background: 'var(--accent-soft)',
+                    border: '1.5px solid #cfdfd0',
+                    display: 'grid',
+                    placeItems: 'center',
+                    fontWeight: 700,
+                    fontSize: 14,
+                    color: 'var(--accent)',
+                    flexShrink: 0,
+                  }}
+                >
                   {review.author.charAt(0).toUpperCase()}
                 </div>
-                <span className="font-semibold text-gray-900">{review.author}</span>
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--ink)' }}>{review.author}</div>
+                  {review.strollerType && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 3 }}>
+                      <span style={{ color: 'var(--ink-3)' }}>
+                        <Icon id={strollerIconMap[review.strollerType] ?? 'i-pram'} size={12} />
+                      </span>
+                      <span style={{ fontSize: 12, color: 'var(--ink-3)' }}>{review.strollerType}</span>
+                    </div>
+                  )}
+                </div>
               </div>
-              {review.strollerType && (
-                <span className="text-xs text-gray-500 ml-10">🐣 {review.strollerType}</span>
-              )}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4, flexShrink: 0 }}>
+                <Stars value={review.rating} />
+                <span style={{ fontSize: 12, color: 'var(--ink-4)' }}>{review.date}</span>
+              </div>
             </div>
-            <div className="flex flex-col items-end gap-1">
-              <StarRating value={review.rating} readonly size="sm" />
-              <span className="text-xs text-gray-400">{review.date}</span>
-            </div>
+            <p style={{ fontSize: 14, color: 'var(--ink-2)', lineHeight: 1.6, margin: 0 }}>{review.comment}</p>
           </div>
-          <p className="text-sm text-gray-700 leading-relaxed mt-2">{review.comment}</p>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   )
 }
