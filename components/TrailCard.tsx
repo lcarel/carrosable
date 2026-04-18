@@ -1,6 +1,6 @@
 import { Trail } from '@/types'
 import StrollerBadge from './StrollerBadge'
-import Image from 'next/image'
+import TrailPlaceholder from './TrailPlaceholder'
 import { MapPin, Clock, TrendingUp, Route } from 'lucide-react'
 
 interface TrailCardProps {
@@ -17,14 +17,7 @@ export default function TrailCard({ trail, avgRating = 0, reviewCount = 0, voteC
       className="group block bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md border border-gray-100 transition-all duration-200 hover:-translate-y-0.5"
     >
       <div className="relative h-48 overflow-hidden">
-        <Image
-          src={trail.imageUrl}
-          alt={trail.name}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+        <TrailPlaceholder level={trail.strollerLevel} className="absolute inset-0" />
         <div className="absolute bottom-3 left-3">
           <StrollerBadge level={trail.strollerLevel} showLabel={false} size="sm" />
         </div>

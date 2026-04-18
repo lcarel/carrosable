@@ -5,11 +5,11 @@ import dynamic from 'next/dynamic'
 import { trails, getTrailById } from '@/data/trails'
 import { Review } from '@/types'
 import StrollerBadge, { StrollerLevelInfo } from '@/components/StrollerBadge'
+import TrailPlaceholder from '@/components/TrailPlaceholder'
 import VoteButton from '@/components/VoteButton'
 import ReviewForm from '@/components/ReviewForm'
 import ReviewList from '@/components/ReviewList'
 import StarRating from '@/components/StarRating'
-import Image from 'next/image'
 import { MapPin, Clock, TrendingUp, Route, ArrowLeft, Tag } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { fetchReviews, addReview } from '@/lib/reviewsApi'
@@ -59,17 +59,10 @@ export default function TrailPage({ params }: PageProps) {
         Retour aux balades
       </a>
 
-      {/* Hero image */}
+      {/* Hero banner */}
       <div className="relative h-72 sm:h-96 rounded-3xl overflow-hidden mb-8 shadow-lg">
-        <Image
-          src={trail.imageUrl}
-          alt={trail.name}
-          fill
-          className="object-cover"
-          priority
-          sizes="(max-width: 896px) 100vw, 896px"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <TrailPlaceholder level={trail.strollerLevel} className="absolute inset-0" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
         <div className="absolute bottom-6 left-6 right-6">
           <div className="mb-2">
             <StrollerBadge level={trail.strollerLevel} size="md" />
@@ -202,13 +195,7 @@ export default function TrailPage({ params }: PageProps) {
                     className="flex items-center gap-3 p-3 bg-white rounded-xl border border-gray-100 hover:border-green-200 hover:bg-green-50 transition-all group"
                   >
                     <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
-                      <Image
-                        src={t.imageUrl}
-                        alt={t.name}
-                        fill
-                        className="object-cover"
-                        sizes="48px"
-                      />
+                      <TrailPlaceholder level={t.strollerLevel} className="absolute inset-0" showEmoji={false} />
                     </div>
                     <div className="min-w-0">
                       <p className="text-sm font-medium text-gray-900 group-hover:text-green-700 truncate leading-tight">

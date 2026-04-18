@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { submitProposal } from '@/lib/proposalsApi'
-import { MapPin, Ruler, TrendingUp, Clock, Tag, Image, Navigation, CheckCircle, AlertCircle } from 'lucide-react'
+import { MapPin, Ruler, TrendingUp, Clock, Tag, Navigation, CheckCircle, AlertCircle } from 'lucide-react'
 
 const strollerLevels = [
   {
@@ -41,7 +41,6 @@ const initialForm = {
   duration: '',
   strollerLevel: null as 1 | 2 | 3 | null,
   tags: '',
-  imageUrl: '',
   lat: '',
   lng: '',
   submitterName: '',
@@ -94,7 +93,6 @@ export default function ProposerPage() {
         duration: form.duration.trim(),
         strollerLevel: form.strollerLevel!,
         tags: form.tags.trim(),
-        imageUrl: form.imageUrl.trim(),
         lat: Number(form.lat),
         lng: Number(form.lng),
         submitterName: form.submitterName.trim(),
@@ -377,45 +375,6 @@ export default function ProposerPage() {
           </fieldset>
 
           {/* Photo */}
-          <fieldset className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
-            <legend className="text-lg font-bold text-gray-900 px-1">
-              <Image className="inline w-4 h-4 mr-1" />
-              Photo{' '}
-              <span className="font-normal text-gray-400 text-base">(facultatif)</span>
-            </legend>
-            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm text-gray-600">
-              <strong>Comment trouver une photo ?</strong>
-              <ul className="list-disc ml-5 mt-2 space-y-1 text-gray-500">
-                <li>
-                  Rendez-vous sur{' '}
-                  <a
-                    href="https://unsplash.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline text-green-700"
-                  >
-                    unsplash.com
-                  </a>{' '}
-                  (gratuit) et cherchez un paysage similaire
-                </li>
-                <li>
-                  Copiez l'URL de la photo et ajoutez <code className="bg-gray-200 px-1 rounded">?w=800</code> à la fin
-                </li>
-                <li>Ou laissez vide et nous choisirons une photo adaptée</li>
-              </ul>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">URL de la photo</label>
-              <input
-                type="url"
-                value={form.imageUrl}
-                onChange={(e) => set('imageUrl', e.target.value)}
-                placeholder="https://images.unsplash.com/photo-XXXXXXXX?w=800"
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-          </fieldset>
-
           {/* Contact */}
           <fieldset className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
             <legend className="text-lg font-bold text-gray-900 px-1">

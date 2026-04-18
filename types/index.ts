@@ -11,7 +11,7 @@ export interface Trail {
   duration: string // ex: "1h30"
   strollerLevel: StrollerLevel
   tags: string[]
-  imageUrl: string
+  imageUrl?: string
   coordinates: {
     lat: number
     lng: number

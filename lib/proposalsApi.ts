@@ -10,7 +10,6 @@ export interface ProposalData {
   duration: string
   strollerLevel: 1 | 2 | 3
   tags: string
-  imageUrl: string
   lat: number
   lng: number
   submitterName: string
@@ -39,7 +38,6 @@ export async function submitProposal(proposal: ProposalData): Promise<void> {
     duration: proposal.duration,
     stroller_level: proposal.strollerLevel,
     tags: proposal.tags || null,
-    image_url: proposal.imageUrl || null,
     lat: proposal.lat,
     lng: proposal.lng,
     submitter_name: proposal.submitterName || null,

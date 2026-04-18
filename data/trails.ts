@@ -15,7 +15,6 @@ export const trails: Trail[] = [
   duration: '1h00',
   strollerLevel: 3,
   tags: ['parc', 'asphalte', 'plat', 'urbain', 'lac', 'aire de jeux', 'ombragé'],
-  imageUrl: 'https://images.unsplash.com/photo-1588392382834-a891154bca4d?w=800',
   coordinates: {
     lat: 43.2601,
     lng: 5.3797,
@@ -36,7 +35,6 @@ export const trails: Trail[] = [
   duration: '1h30',
   strollerLevel: 3,
   tags: ['mer', 'asphalte', 'plat', 'urbain', 'vue mer', 'plages'],
-  imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800',
   coordinates: {
     lat: 43.2750,
     lng: 5.3530,
@@ -57,7 +55,6 @@ export const trails: Trail[] = [
   duration: '0h45',
   strollerLevel: 3,
   tags: ['urbain', 'patrimoine', 'asphalte', 'vue mer', 'gratuit', 'culturel'],
-  imageUrl: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=800',
   coordinates: {
     lat: 43.2964,
     lng: 5.3613,
@@ -78,7 +75,6 @@ export const trails: Trail[] = [
   duration: '0h45',
   strollerLevel: 3,
   tags: ['parc', 'asphalte', 'ombragé', 'urbain', 'jardin botanique', 'aire de jeux'],
-  imageUrl: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800',
   coordinates: {
     lat: 43.3037,
     lng: 5.3964,
@@ -99,7 +95,6 @@ export const trails: Trail[] = [
   duration: '1h00',
   strollerLevel: 2,
   tags: ['nature', 'marais', 'faune', 'Camargue', 'plat', 'oiseaux', 'observation'],
-  imageUrl: 'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=800',
   coordinates: {
     lat: 43.5270,
     lng: 4.7080,
@@ -120,7 +115,6 @@ export const trails: Trail[] = [
   duration: '1h15',
   strollerLevel: 2,
   tags: ['nature', 'étang', 'ferme pédagogique', 'botanique', 'méditerranéen', 'famille'],
-  imageUrl: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=800',
   coordinates: {
     lat: 43.4080,
     lng: 5.0520,
@@ -141,7 +135,6 @@ export const trails: Trail[] = [
   duration: '1h30',
   strollerLevel: 2,
   tags: ['forêt', 'lac', 'patrimoine', 'ombragé', 'Sainte-Victoire', 'pins'],
-  imageUrl: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800',
   coordinates: {
     lat: 43.5340,
     lng: 5.5610,
@@ -162,7 +155,6 @@ export const trails: Trail[] = [
   duration: '1h15',
   strollerLevel: 3,
   tags: ['parc', 'nature', 'histoire', 'allées larges', 'plat', 'insolite'],
-  imageUrl: 'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?w=800',
   coordinates: {
     lat: 43.5490,
     lng: 5.0330,
@@ -183,7 +175,6 @@ export const trails: Trail[] = [
   duration: '1h30',
   strollerLevel: 2,
   tags: ['urbain', 'patrimoine', 'romain', 'plat', 'fleuve', 'culturel', 'histoire'],
-  imageUrl: 'https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?w=800',
   coordinates: {
     lat: 43.6767,
     lng: 4.6278,
@@ -204,7 +195,6 @@ export const trails: Trail[] = [
   duration: '1h00',
   strollerLevel: 2,
   tags: ['urbain', 'patrimoine', 'provençal', 'fontaines', 'histoire', 'Nostradamus'],
-  imageUrl: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800',
   coordinates: {
     lat: 43.6397,
     lng: 5.0975,
