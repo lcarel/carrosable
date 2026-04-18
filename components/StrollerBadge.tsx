@@ -1,97 +1,97 @@
 import { StrollerLevel } from '@/types'
 
+/* Pram wheel icon — matching i-pram-wheel from the design */
+export function PramWheel({ active, size = 16 }: { active: boolean; size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={{ color: active ? 'var(--accent)' : 'var(--line)', flexShrink: 0 }}
+    >
+      <circle cx="12" cy="12" r="8" />
+      <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+      <path d="M12 4v16M4 12h16M6.3 6.3l11.4 11.4M17.7 6.3L6.3 17.7" />
+    </svg>
+  )
+}
+
+/* Row of 1–3 pram wheels */
+export function PramMeter({ level, size = 16 }: { level: StrollerLevel; size?: number }) {
+  return (
+    <span className="flex items-center gap-1">
+      {([1, 2, 3] as StrollerLevel[]).map((i) => (
+        <PramWheel key={i} active={i <= level} size={size} />
+      ))}
+    </span>
+  )
+}
+
+const levelLabel: Record<StrollerLevel, string> = {
+  1: 'Peu carrossable',
+  2: 'Carrossable',
+  3: 'Très carrossable',
+}
+
+const levelDescription: Record<StrollerLevel, string> = {
+  1: 'Terrain difficile – poussette tout-terrain recommandée',
+  2: 'Praticable – poussette robuste conseillée',
+  3: 'Idéal – toutes les poussettes passent',
+}
+
 interface StrollerBadgeProps {
   level: StrollerLevel
   showLabel?: boolean
   size?: 'sm' | 'md' | 'lg'
 }
 
-const levelConfig = {
-  1: {
-    label: 'Peu carrossable',
-    description: 'Terrain difficile – poussette tout-terrain recommandée',
-    color: 'bg-red-100 text-red-700 border-red-200',
-    dotColor: 'bg-red-500',
-  },
-  2: {
-    label: 'Carrossable',
-    description: 'Praticable – poussette robuste conseillée',
-    color: 'bg-amber-100 text-amber-700 border-amber-200',
-    dotColor: 'bg-amber-500',
-  },
-  3: {
-    label: 'Très carrossable',
-    description: 'Idéal – toutes les poussettes passent',
-    color: 'bg-green-100 text-green-700 border-green-200',
-    dotColor: 'bg-green-500',
-  },
-}
+export default function StrollerBadge({ level, showLabel = true, size = 'md' }: StrollerBadgeProps) {
+  const wheelSize = size === 'sm' ? 14 : size === 'lg' ? 20 : 16
 
-function StrollerIcon({ filled = false, size = 'md' }: { filled?: boolean; size?: string }) {
-  const dim = size === 'sm' ? 16 : size === 'lg' ? 28 : 20
   return (
-    <svg
-      width={dim}
-      height={dim}
-      viewBox="0 0 24 24"
-      fill={filled ? 'currentColor' : 'none'}
-      stroke="currentColor"
-      strokeWidth={filled ? 0 : 1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={filled ? '' : 'opacity-30'}
+    <span
+      className="inline-flex items-center gap-1.5"
+      style={{
+        padding: '5px 10px',
+        borderRadius: 999,
+        background: 'rgba(255,255,255,.95)',
+        border: '1px solid var(--line)',
+        fontSize: 12,
+        fontWeight: 600,
+        color: 'var(--accent-ink)',
+        letterSpacing: 0,
+      }}
     >
-      {/* Stroller body */}
-      <path d="M3 3h2l3.5 9H16a2 2 0 0 0 2-2V6" />
-      <circle cx="8" cy="19" r="2" />
-      <circle cx="16" cy="19" r="2" />
-      <path d="M8.5 12 7 8" />
-      {/* Hood */}
-      <path d="M18 6c0-3-3-5-6-5" />
-    </svg>
-  )
-}
-
-export default function StrollerBadge({
-  level,
-  showLabel = true,
-  size = 'md',
-}: StrollerBadgeProps) {
-  const config = levelConfig[level]
-
-  return (
-    <div className="flex flex-col gap-1">
-      <div
-        className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full border text-xs font-semibold ${config.color}`}
-      >
-        <div className="flex items-center gap-0.5">
-          {[1, 2, 3].map((i) => (
-            <span key={i} className={i <= level ? '' : 'opacity-25'}>
-              <StrollerIcon filled={i <= level} size={size} />
-            </span>
-          ))}
-        </div>
-        {showLabel && <span className="ml-1">{config.label}</span>}
-      </div>
-    </div>
+      <PramMeter level={level} size={wheelSize} />
+      {showLabel && <span>{levelLabel[level]}</span>}
+    </span>
   )
 }
 
 export function StrollerLevelInfo({ level }: { level: StrollerLevel }) {
-  const config = levelConfig[level]
   return (
-    <div className={`rounded-xl border p-4 ${config.color}`}>
+    <div
+      style={{
+        borderRadius: 14,
+        border: '1px solid var(--line)',
+        padding: '16px',
+        background: 'var(--accent-soft)',
+      }}
+    >
       <div className="flex items-start gap-3">
-        <div className="flex items-center gap-0.5 mt-0.5">
-          {[1, 2, 3].map((i) => (
-            <span key={i} className={i <= level ? '' : 'opacity-25'}>
-              <StrollerIcon filled={i <= level} size="lg" />
-            </span>
-          ))}
-        </div>
+        <PramMeter level={level} size={20} />
         <div>
-          <p className="font-bold text-base">{config.label}</p>
-          <p className="text-sm mt-0.5 opacity-80">{config.description}</p>
+          <p style={{ fontWeight: 700, fontSize: 15, color: 'var(--ink)', margin: 0 }}>
+            {levelLabel[level]}
+          </p>
+          <p style={{ fontSize: 13, color: 'var(--ink-3)', marginTop: 4 }}>
+            {levelDescription[level]}
+          </p>
         </div>
       </div>
     </div>

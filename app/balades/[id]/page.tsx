@@ -4,24 +4,35 @@ import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { trails, getTrailById } from '@/data/trails'
 import { Review } from '@/types'
-import StrollerBadge, { StrollerLevelInfo } from '@/components/StrollerBadge'
+import StrollerBadge, { StrollerLevelInfo, PramMeter } from '@/components/StrollerBadge'
 import VoteButton from '@/components/VoteButton'
 import ReviewForm from '@/components/ReviewForm'
 import ReviewList from '@/components/ReviewList'
 import StarRating from '@/components/StarRating'
-import { MapPin, Clock, TrendingUp, Route, ArrowLeft, Tag } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { fetchReviews, addReview } from '@/lib/reviewsApi'
 
 const TrailDetailMap = dynamic(() => import('@/components/TrailDetailMap'), {
   ssr: false,
   loading: () => (
-    <div className="h-52 rounded-2xl bg-gray-100 animate-pulse border border-gray-200" />
+    <div
+      className="animate-pulse"
+      style={{ height: 200, borderRadius: 14, background: 'var(--line-2)', border: '1px solid var(--line)' }}
+    />
   ),
 })
 
 interface PageProps {
   params: { id: string }
+}
+
+/* Inline SVG helper */
+function Icon({ id, size = 16 }: { id: string; size?: number }) {
+  return (
+    <svg width={size} height={size} fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+      <use href={`#${id}`} />
+    </svg>
+  )
 }
 
 export default function TrailPage({ params }: PageProps) {
@@ -48,84 +59,101 @@ export default function TrailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div style={{ maxWidth: 960, margin: '0 auto', padding: '32px 32px 96px' }}>
       {/* Back */}
       <a
         href="/"
-        className="inline-flex items-center gap-2 text-green-700 hover:text-green-900 font-medium text-sm mb-6 group"
+        className="inline-flex items-center gap-2 group mb-8"
+        style={{ fontSize: 14, fontWeight: 500, color: 'var(--accent)', textDecoration: 'none' }}
       >
-        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+        <span className="group-hover:-translate-x-0.5 transition-transform">
+          <Icon id="i-arrow-left" size={16} />
+        </span>
         Retour aux balades
       </a>
 
       {/* Header */}
-      <div className="mb-8">
-        <div className="mb-3">
-          <StrollerBadge level={trail.strollerLevel} size="md" />
+      <header className="mb-8">
+        <StrollerBadge level={trail.strollerLevel} size="md" />
+        <h1 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 700, letterSpacing: '-.03em', margin: '14px 0 10px', color: 'var(--ink)' }}>
+          {trail.name}
+        </h1>
+        <div className="flex items-center gap-1.5" style={{ fontSize: 14, color: 'var(--ink-3)' }}>
+          <Icon id="i-pin" size={14} />
+          {trail.location}, {trail.region}
         </div>
-        <h1 className="text-3xl font-bold text-gray-900 leading-tight mb-2">{trail.name}</h1>
-        <div className="flex items-center gap-2 text-gray-500 text-sm">
-          <MapPin className="w-4 h-4" />
-          <span>{trail.location}, {trail.region}</span>
-        </div>
-      </div>
+      </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left column */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        {/* ── Left column ─────────────────────────────── */}
         <div className="lg:col-span-2 space-y-8">
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-3">
             {[
-              {
-                icon: <Route className="w-5 h-5" />,
-                value: `${trail.distance} km`,
-                label: 'Distance',
-              },
-              { icon: <Clock className="w-5 h-5" />, value: trail.duration, label: 'Durée' },
-              {
-                icon: <TrendingUp className="w-5 h-5" />,
-                value: `+${trail.elevation} m`,
-                label: 'Dénivelé',
-              },
-            ].map(({ icon, value, label }) => (
+              { iconId: 'i-route', value: `${trail.distance} km`, label: 'Distance' },
+              { iconId: 'i-clock', value: trail.duration, label: 'Durée' },
+              { iconId: 'i-elev', value: `+${trail.elevation} m`, label: 'Dénivelé' },
+            ].map(({ iconId, value, label }) => (
               <div
                 key={label}
-                className="bg-green-50 border border-green-100 rounded-2xl p-4 text-center"
+                className="text-center"
+                style={{
+                  background: 'var(--accent-soft)',
+                  border: '1px solid #cfdfd0',
+                  borderRadius: 14,
+                  padding: '16px 12px',
+                }}
               >
-                <div className="text-green-600 flex justify-center mb-1">{icon}</div>
-                <p className="font-bold text-gray-900 text-lg leading-none">{value}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{label}</p>
+                <div className="flex justify-center mb-2" style={{ color: 'var(--accent)' }}>
+                  <Icon id={iconId} size={18} />
+                </div>
+                <p style={{ fontWeight: 700, fontSize: 18, letterSpacing: '-.02em', color: 'var(--ink)', margin: 0 }}>{value}</p>
+                <p style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 2 }}>{label}</p>
               </div>
             ))}
           </div>
 
           {/* Description */}
           <div>
-            <h2 className="font-bold text-gray-900 text-xl mb-3">Description</h2>
-            <p className="text-gray-700 leading-relaxed">{trail.description}</p>
+            <h2 style={{ fontWeight: 700, fontSize: 17, letterSpacing: '-.01em', color: 'var(--ink)', marginBottom: 10 }}>Description</h2>
+            <p style={{ color: 'var(--ink-2)', lineHeight: 1.65, fontSize: 15 }}>{trail.description}</p>
           </div>
 
           {/* Tags */}
           <div>
-            <div className="flex items-center gap-2 mb-2 text-gray-500 text-sm font-medium">
-              <Tag className="w-4 h-4" />
+            <div className="flex items-center gap-2 mb-3" style={{ fontSize: 13, color: 'var(--ink-3)', fontWeight: 500 }}>
+              <Icon id="i-tag" size={14} />
               Tags
             </div>
             <div className="flex flex-wrap gap-2">
               {trail.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="bg-green-50 border border-green-100 text-green-700 text-sm px-3 py-1 rounded-full"
+                  style={{
+                    fontSize: 13,
+                    color: 'var(--ink-3)',
+                    padding: '5px 12px',
+                    borderRadius: 999,
+                    border: '1px solid var(--line)',
+                    background: 'var(--surface)',
+                  }}
                 >
-                  #{tag}
+                  <span style={{ color: 'var(--ink-4)' }}>#</span>{tag}
                 </span>
               ))}
             </div>
           </div>
 
           {/* Vote */}
-          <div className="bg-gray-50 rounded-2xl p-5 border border-gray-200">
-            <h2 className="font-bold text-gray-900 mb-3">
+          <div
+            style={{
+              background: 'var(--bg)',
+              borderRadius: 14,
+              padding: '20px',
+              border: '1px solid var(--line)',
+            }}
+          >
+            <h2 style={{ fontWeight: 700, fontSize: 15, color: 'var(--ink)', marginBottom: 12 }}>
               Cette balade vous a été utile ?
             </h2>
             <VoteButton trailId={trail.id} />
@@ -134,13 +162,16 @@ export default function TrailPage({ params }: PageProps) {
           {/* Reviews */}
           <div>
             <div className="flex items-center justify-between mb-5">
-              <h2 className="font-bold text-gray-900 text-xl">
-                Avis ({reviewsLoading ? '…' : reviews.length})
+              <h2 style={{ fontWeight: 700, fontSize: 17, letterSpacing: '-.01em', color: 'var(--ink)', margin: 0 }}>
+                Avis{' '}
+                <span style={{ color: 'var(--ink-4)', fontWeight: 500 }}>
+                  ({reviewsLoading ? '…' : reviews.length})
+                </span>
               </h2>
               {avgRating > 0 && (
                 <div className="flex items-center gap-2">
                   <StarRating value={Math.round(avgRating)} readonly size="sm" />
-                  <span className="text-sm font-semibold text-gray-700">
+                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-2)' }}>
                     {avgRating.toFixed(1)}/5
                   </span>
                 </div>
@@ -149,7 +180,7 @@ export default function TrailPage({ params }: PageProps) {
             {reviewsLoading ? (
               <div className="space-y-3">
                 {[1, 2].map((i) => (
-                  <div key={i} className="h-24 bg-gray-100 rounded-xl animate-pulse" />
+                  <div key={i} className="animate-pulse" style={{ height: 96, borderRadius: 14, background: 'var(--line-2)' }} />
                 ))}
               </div>
             ) : (
@@ -160,23 +191,29 @@ export default function TrailPage({ params }: PageProps) {
           <ReviewForm trailId={trail.id} onSubmit={handleNewReview} />
         </div>
 
-        {/* Right column: sidebar */}
+        {/* ── Sidebar ──────────────────────────────────── */}
         <div className="space-y-6">
-          {/* Stroller info */}
+          {/* Stroller level */}
           <div>
-            <h3 className="font-bold text-gray-900 mb-3">Niveau carrossabilité</h3>
+            <h3 style={{ fontWeight: 700, fontSize: 15, color: 'var(--ink)', marginBottom: 10 }}>
+              Niveau carrossabilité
+            </h3>
             <StrollerLevelInfo level={trail.strollerLevel} />
           </div>
 
-          {/* Interactive map */}
+          {/* Map */}
           <div>
-            <h3 className="font-bold text-gray-900 mb-3">Localisation</h3>
+            <h3 style={{ fontWeight: 700, fontSize: 15, color: 'var(--ink)', marginBottom: 10 }}>
+              Localisation
+            </h3>
             <TrailDetailMap trail={trail} />
           </div>
 
           {/* Other trails */}
           <div>
-            <h3 className="font-bold text-gray-900 mb-3">Autres balades</h3>
+            <h3 style={{ fontWeight: 700, fontSize: 15, color: 'var(--ink)', marginBottom: 10 }}>
+              Autres balades
+            </h3>
             <div className="space-y-2">
               {trails
                 .filter((t) => t.id !== trail.id)
@@ -185,15 +222,23 @@ export default function TrailPage({ params }: PageProps) {
                   <a
                     key={t.id}
                     href={`/balades/${t.id}`}
-                    className="flex items-center gap-3 p-3 bg-white rounded-xl border border-gray-100 hover:border-green-200 hover:bg-green-50 transition-all group"
+                    className="flex items-start gap-3 group"
+                    style={{
+                      padding: '12px 14px',
+                      background: 'var(--surface)',
+                      borderRadius: 12,
+                      border: '1px solid var(--line)',
+                      transition: 'border-color .15s, background .15s',
+                    }}
                   >
-                      <div className="min-w-0">
-                      <p className="text-sm font-medium text-gray-900 group-hover:text-green-700 truncate leading-tight">
+                    <div className="min-w-0 flex-1">
+                      <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--ink)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                        className="group-hover:text-[var(--accent)] transition-colors">
                         {t.name}
                       </p>
-                      <p className="text-xs text-gray-500 truncate">{t.location}</p>
-                      <div className="mt-0.5">
-                        <StrollerBadge level={t.strollerLevel} showLabel={false} size="sm" />
+                      <p style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 2 }}>{t.location}</p>
+                      <div className="mt-2">
+                        <PramMeter level={t.strollerLevel} size={13} />
                       </div>
                     </div>
                   </a>

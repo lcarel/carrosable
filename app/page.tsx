@@ -5,12 +5,15 @@ import dynamic from 'next/dynamic'
 import { trails } from '@/data/trails'
 import { Trail } from '@/types'
 import TrailCard from '@/components/TrailCard'
-import { Search, SlidersHorizontal, LayoutGrid, Map } from 'lucide-react'
+import { PramMeter } from '@/components/StrollerBadge'
 
 const TrailMap = dynamic(() => import('@/components/TrailMap'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-[600px] bg-gray-100 rounded-2xl animate-pulse flex items-center justify-center text-gray-400">
+    <div
+      className="w-full animate-pulse flex items-center justify-center"
+      style={{ height: 600, background: 'var(--line-2)', borderRadius: 14, color: 'var(--ink-4)', fontSize: 14 }}
+    >
       Chargement de la carte…
     </div>
   ),
@@ -22,45 +25,78 @@ const levelLabels: Record<number, string> = {
   3: 'Très carrossable',
 }
 
-function StrollerFilterButton({
-  level,
-  active,
-  onClick,
-}: {
-  level: number
-  active: boolean
-  onClick: () => void
-}) {
+const regions = Array.from(new Set(trails.map((t) => t.region))).sort()
+
+/* ── Hero visual overlay chip ─────────────────────────────── */
+function HeroVisual() {
+  const featured = trails[0]
+  return (
+    <aside
+      className="striped relative hidden md:block"
+      style={{
+        aspectRatio: '5/6',
+        borderRadius: 20,
+        overflow: 'hidden',
+        border: '1px solid var(--line)',
+      }}
+    >
+      {/* overlay chip */}
+      {featured && (
+        <div
+          className="absolute bottom-4 left-4 right-4 flex items-center gap-3"
+          style={{
+            background: 'rgba(255,255,255,.92)',
+            backdropFilter: 'blur(6px)',
+            border: '1px solid var(--line)',
+            padding: '14px 16px',
+            borderRadius: 14,
+          }}
+        >
+          <div className="flex-1 min-w-0">
+            <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {featured.name}
+            </div>
+            <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 2 }}>
+              {featured.location} · {featured.distance} km · {featured.duration}
+            </div>
+          </div>
+          <PramMeter level={featured.strollerLevel} size={16} />
+        </div>
+      )}
+    </aside>
+  )
+}
+
+/* ── Filter chip ──────────────────────────────────────────── */
+function LevelChip({ level, active, onClick }: { level: number; active: boolean; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-2 px-4 py-2 rounded-full border-2 text-sm font-semibold transition-all ${
-        active
-          ? level === 1
-            ? 'bg-red-500 border-red-500 text-white'
-            : level === 2
-            ? 'bg-amber-500 border-amber-500 text-white'
-            : 'bg-green-600 border-green-600 text-white'
-          : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
-      }`}
+      className="flex items-center gap-2 transition-all"
+      style={{
+        padding: '8px 14px',
+        borderRadius: 999,
+        border: `1px solid ${active ? '#cfdfd0' : 'var(--line)'}`,
+        background: active ? 'var(--accent-soft)' : 'var(--surface)',
+        fontSize: 13,
+        fontWeight: 500,
+        color: active ? 'var(--accent-ink)' : 'var(--ink-2)',
+        cursor: 'pointer',
+      }}
     >
-      <span>{'🐣'.repeat(level)}</span>
+      <PramMeter level={level as 1 | 2 | 3} size={13} />
       <span className="hidden sm:inline">{levelLabels[level]}</span>
     </button>
   )
 }
 
+/* ── Main page ────────────────────────────────────────────── */
 export default function HomePage() {
   const [search, setSearch] = useState('')
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null)
   const [selectedRegion, setSelectedRegion] = useState('')
   const [view, setView] = useState<'list' | 'map'>('list')
   const [selectedTrailId, setSelectedTrailId] = useState<string | undefined>()
-
-  const regions = useMemo(
-    () => Array.from(new Set(trails.map((t) => t.region))).sort(),
-    []
-  )
 
   const filtered = useMemo(() => {
     return trails.filter((trail) => {
@@ -82,210 +118,395 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-green-700 to-green-900 text-white py-16 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-5xl mb-4">🐣</p>
-          <h1 className="text-4xl font-bold mb-3">Balades adaptées aux poussettes</h1>
-          <p className="text-green-100 text-lg mb-8">
-            Découvrez et partagez les meilleures randonnées carrossables pour profiter de la
-            nature en famille.
-          </p>
-          <div className="relative max-w-xl mx-auto">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Rechercher par lieu, région, type de terrain..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-gray-900 text-base focus:outline-none focus:ring-4 focus:ring-green-300 shadow-lg"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Filters */}
-      <section className="bg-white border-b border-gray-200 sticky top-16 z-40 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-3 space-y-2">
-          {/* Ligne 1 : icône + niveaux + vue */}
-          <div className="flex items-center gap-2">
-            <SlidersHorizontal className="w-4 h-4 text-gray-400 shrink-0" />
-            <div className="flex items-center gap-2 overflow-x-auto scrollbar-none flex-1 min-w-0 pb-0.5">
-              {[1, 2, 3].map((level) => (
-                <StrollerFilterButton
-                  key={level}
-                  level={level}
-                  active={selectedLevel === level}
-                  onClick={() => setSelectedLevel(selectedLevel === level ? null : level)}
-                />
-              ))}
-            </div>
-            <div className="shrink-0 flex items-center bg-gray-100 rounded-full p-1">
-              <button
-                onClick={() => setView('list')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                  view === 'list'
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                <LayoutGrid className="w-4 h-4" />
-                <span className="hidden sm:inline">Liste</span>
-              </button>
-              <button
-                onClick={() => setView('map')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                  view === 'map'
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                <Map className="w-4 h-4" />
-                <span className="hidden sm:inline">Carte</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Ligne 2 : région */}
-          <select
-            value={selectedRegion}
-            onChange={(e) => setSelectedRegion(e.target.value)}
-            className="w-full sm:w-auto text-sm border border-gray-200 rounded-full px-4 py-2 bg-white text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+      {/* ── HERO ─────────────────────────────────────────── */}
+      <section style={{ padding: '72px 0 56px' }}>
+        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 32px' }}>
+          <div
+            className="grid gap-14 items-center"
+            style={{ gridTemplateColumns: '1.05fr .95fr' }}
           >
-            <option value="">Toutes les régions</option>
-            {regions.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
+            <div>
+              {/* Eyebrow */}
+              <span
+                className="inline-flex items-center gap-2"
+                style={{
+                  fontSize: 12,
+                  fontWeight: 600,
+                  letterSpacing: '.04em',
+                  textTransform: 'uppercase',
+                  color: 'var(--accent)',
+                  padding: '6px 10px',
+                  border: '1px solid var(--line)',
+                  borderRadius: 999,
+                  background: 'var(--surface)',
+                }}
+              >
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
+                Balades testées par des parents
+              </span>
+
+              {/* Title */}
+              <h1
+                style={{
+                  fontSize: 'clamp(40px, 5vw, 58px)',
+                  lineHeight: 1.02,
+                  letterSpacing: '-.035em',
+                  fontWeight: 700,
+                  margin: '20px 0 18px',
+                  color: 'var(--ink)',
+                }}
+              >
+                Des balades pensées{' '}
+                <em style={{ fontStyle: 'normal', color: 'var(--accent)' }}>pour les poussettes.</em>
+              </h1>
+
+              {/* Lede */}
+              <p style={{ fontSize: 17, color: 'var(--ink-2)', maxWidth: '46ch', lineHeight: 1.55 }}>
+                Trouvez des itinéraires carrossables, testés et notés par des parents, pour profiter de la nature sans galère de roues.
+              </p>
+
+              {/* Search */}
+              <form
+                onSubmit={(e) => e.preventDefault()}
+                className="flex items-center gap-3 mt-7"
+                style={{
+                  background: 'var(--surface)',
+                  border: '1px solid var(--line)',
+                  borderRadius: 999,
+                  padding: '6px 6px 6px 20px',
+                  boxShadow: 'var(--shadow-sm)',
+                  maxWidth: 520,
+                }}
+              >
+                <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--ink-3)', flexShrink: 0 }}>
+                  <use href="#i-search" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Lieu, région, type de terrain…"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  style={{
+                    flex: 1,
+                    border: 'none',
+                    outline: 'none',
+                    background: 'transparent',
+                    fontSize: 15,
+                    padding: '10px 0',
+                    color: 'var(--ink)',
+                    fontFamily: 'inherit',
+                  }}
+                />
+                <button
+                  type="submit"
+                  style={{
+                    background: 'var(--accent)',
+                    color: '#fff',
+                    padding: '10px 18px',
+                    borderRadius: 999,
+                    fontWeight: 600,
+                    fontSize: 14,
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontFamily: 'inherit',
+                  }}
+                >
+                  Chercher
+                </button>
+              </form>
+
+              {/* Stats */}
+              <div className="flex items-center gap-8 mt-9">
+                {[
+                  { num: `${trails.length}`, lbl: 'balades' },
+                  { num: `${regions.length}`, lbl: 'régions' },
+                ].map(({ num, lbl }, i) => (
+                  <div key={lbl} className="flex items-center gap-8">
+                    {i > 0 && <div style={{ width: 1, height: 32, background: 'var(--line)' }} />}
+                    <div>
+                      <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-.02em', color: 'var(--ink)' }}>{num}</div>
+                      <div style={{ fontSize: 12, color: 'var(--ink-3)', letterSpacing: '.02em', textTransform: 'uppercase', fontWeight: 600 }}>{lbl}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <HeroVisual />
+          </div>
         </div>
       </section>
 
-      {/* Results */}
-      <section className="max-w-6xl mx-auto px-4 py-10">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900">
-            {filtered.length} balade{filtered.length !== 1 ? 's' : ''} trouvée
-            {filtered.length !== 1 ? 's' : ''}
-            {selectedLevel ? ` · ${levelLabels[selectedLevel]}` : ''}
-            {selectedRegion ? ` · ${selectedRegion}` : ''}
-          </h2>
+      {/* ── FILTERS ──────────────────────────────────────── */}
+      <section
+        style={{
+          borderTop: '1px solid var(--line)',
+          borderBottom: '1px solid var(--line)',
+          background: 'var(--surface)',
+          position: 'sticky',
+          top: 68,
+          zIndex: 40,
+        }}
+      >
+        <div
+          style={{ maxWidth: 1240, margin: '0 auto', padding: '0 32px' }}
+          className="flex flex-wrap items-center gap-3 py-3.5"
+        >
+          {/* Sliders icon */}
+          <button
+            className="flex items-center justify-center transition-colors"
+            style={{
+              padding: '8px 10px',
+              borderRadius: 999,
+              border: '1px solid var(--line)',
+              background: 'var(--surface)',
+              color: 'var(--ink-2)',
+              cursor: 'pointer',
+            }}
+            title="Filtres"
+          >
+            <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+              <use href="#i-sliders" />
+            </svg>
+          </button>
+
+          {/* Level chips */}
+          {[1, 2, 3].map((level) => (
+            <LevelChip
+              key={level}
+              level={level}
+              active={selectedLevel === level}
+              onClick={() => setSelectedLevel(selectedLevel === level ? null : level)}
+            />
+          ))}
+
+          {/* Region select */}
+          <div className="flex items-center gap-2" style={{ position: 'relative' }}>
+            <select
+              value={selectedRegion}
+              onChange={(e) => setSelectedRegion(e.target.value)}
+              style={{
+                appearance: 'none',
+                WebkitAppearance: 'none',
+                padding: '8px 32px 8px 14px',
+                borderRadius: 999,
+                border: '1px solid var(--line)',
+                background: 'var(--surface)',
+                fontSize: 13,
+                fontWeight: 500,
+                color: 'var(--ink-2)',
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+                outline: 'none',
+              }}
+            >
+              <option value="">Toutes les régions</option>
+              {regions.map((r) => (
+                <option key={r} value={r}>{r}</option>
+              ))}
+            </select>
+            <svg
+              width="14" height="14" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
+              style={{ position: 'absolute', right: 12, pointerEvents: 'none', color: 'var(--ink-3)' }}
+            >
+              <use href="#i-chev" />
+            </svg>
+          </div>
+
+          {/* Clear */}
           {(search || selectedLevel || selectedRegion) && (
             <button
-              onClick={() => {
-                setSearch('')
-                setSelectedLevel(null)
-                setSelectedRegion('')
-              }}
-              className="text-sm text-green-600 hover:text-green-800 font-medium"
+              onClick={() => { setSearch(''); setSelectedLevel(null); setSelectedRegion('') }}
+              style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 500, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', fontFamily: 'inherit' }}
             >
-              Effacer les filtres
+              Effacer
             </button>
           )}
-        </div>
 
-        {filtered.length === 0 ? (
-          <div className="text-center py-20 text-gray-400">
-            <p className="text-5xl mb-4">🗺️</p>
-            <p className="text-lg font-medium">Aucune balade trouvée</p>
-            <p className="text-sm mt-2">Essayez de modifier vos filtres.</p>
-          </div>
-        ) : view === 'list' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((trail) => (
-              <TrailCard key={trail.id} trail={trail} />
+          {/* View toggle */}
+          <div
+            className="ml-auto flex items-center"
+            style={{ background: 'var(--line-2)', borderRadius: 999, padding: 4 }}
+          >
+            {(['list', 'map'] as const).map((v) => (
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                className="flex items-center gap-1.5"
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: 999,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: view === v ? 'var(--ink)' : 'var(--ink-3)',
+                  background: view === v ? '#fff' : 'transparent',
+                  boxShadow: view === v ? 'var(--shadow-sm)' : 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  transition: 'all .15s ease',
+                }}
+              >
+                <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                  <use href={v === 'list' ? '#i-list' : '#i-map'} />
+                </svg>
+                <span className="hidden sm:inline">{v === 'list' ? 'Liste' : 'Carte'}</span>
+              </button>
             ))}
           </div>
-        ) : (
-          <div className="flex flex-col lg:flex-row gap-6">
-            {/* Map */}
-            <div className="flex-1 h-[600px]">
-              <TrailMap
-                trails={filtered}
-                selectedId={selectedTrailId}
-                onSelect={setSelectedTrailId}
-              />
-            </div>
-
-            {/* Selected trail card */}
-            <div className="lg:w-80">
-              {selectedTrail ? (
-                <div className="sticky top-40">
-                  <p className="text-xs text-gray-500 uppercase font-semibold mb-3 tracking-wide">
-                    Balade sélectionnée
-                  </p>
-                  <TrailCard trail={selectedTrail} />
-                  <button
-                    onClick={() => setSelectedTrailId(undefined)}
-                    className="mt-2 text-xs text-gray-400 hover:text-gray-600 w-full text-center"
-                  >
-                    Désélectionner
-                  </button>
-                </div>
-              ) : (
-                <div className="text-center py-12 text-gray-400 border-2 border-dashed border-gray-200 rounded-2xl">
-                  <Map className="w-8 h-8 mx-auto mb-3 opacity-50" />
-                  <p className="text-sm font-medium">Cliquez sur un marqueur</p>
-                  <p className="text-xs mt-1">pour voir la balade</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        </div>
       </section>
 
-      {/* CTA proposer une balade */}
-      <section className="max-w-6xl mx-auto px-4 py-10">
-        <div className="bg-gradient-to-br from-green-700 to-green-900 rounded-3xl p-8 text-center text-white">
-          <p className="text-3xl mb-3">🗺️</p>
-          <h2 className="text-xl font-bold mb-2">Vous connaissez une balade carrossable ?</h2>
-          <p className="text-green-100 text-sm mb-6 max-w-md mx-auto">
-            Partagez-la avec la communauté ! Remplissez le formulaire et nous l'ajouterons au site
-            après vérification.
+      {/* ── RESULTS ──────────────────────────────────────── */}
+      <section style={{ padding: '32px 0 96px' }}>
+        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 32px' }}>
+          {/* Results header */}
+          <div className="flex items-baseline justify-between mb-5">
+            <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-.01em', color: 'var(--ink)' }}>
+              {filtered.length} balade{filtered.length !== 1 ? 's' : ''} trouvée{filtered.length !== 1 ? 's' : ''}
+              {' '}<span style={{ color: 'var(--ink-3)', fontWeight: 500 }}>
+                {selectedRegion ? `· ${selectedRegion}` : ''}
+                {selectedLevel ? ` · ${levelLabels[selectedLevel]}` : ''}
+              </span>
+            </div>
+          </div>
+
+          {filtered.length === 0 ? (
+            <div className="text-center py-24" style={{ color: 'var(--ink-4)' }}>
+              <svg width="40" height="40" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-4" style={{ color: 'var(--line)' }}>
+                <use href="#i-map" />
+              </svg>
+              <p style={{ fontSize: 16, fontWeight: 600, color: 'var(--ink-3)' }}>Aucune balade trouvée</p>
+              <p style={{ fontSize: 14, marginTop: 6 }}>Essayez de modifier vos filtres.</p>
+            </div>
+          ) : view === 'list' ? (
+            <div
+              className="grid gap-5"
+              style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}
+            >
+              {filtered.map((trail) => (
+                <TrailCard key={trail.id} trail={trail} />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col lg:flex-row gap-6">
+              <div className="flex-1" style={{ height: 600 }}>
+                <TrailMap trails={filtered} selectedId={selectedTrailId} onSelect={setSelectedTrailId} />
+              </div>
+              <div className="lg:w-80">
+                {selectedTrail ? (
+                  <div className="sticky top-40">
+                    <p style={{ fontSize: 11, color: 'var(--ink-4)', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '.04em', marginBottom: 10 }}>
+                      Balade sélectionnée
+                    </p>
+                    <TrailCard trail={selectedTrail} />
+                    <button
+                      onClick={() => setSelectedTrailId(undefined)}
+                      style={{ marginTop: 8, fontSize: 12, color: 'var(--ink-4)', background: 'none', border: 'none', cursor: 'pointer', width: '100%', fontFamily: 'inherit' }}
+                    >
+                      Désélectionner
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    className="text-center py-12"
+                    style={{ border: '2px dashed var(--line)', borderRadius: 14, color: 'var(--ink-4)' }}
+                  >
+                    <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-3" style={{ opacity: .4 }}>
+                      <use href="#i-map" />
+                    </svg>
+                    <p style={{ fontSize: 13, fontWeight: 500 }}>Cliquez sur un marqueur</p>
+                    <p style={{ fontSize: 12, marginTop: 4 }}>pour voir la balade</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── CTA PROPOSER ─────────────────────────────────── */}
+      <section style={{ maxWidth: 1240, margin: '0 auto', padding: '0 32px 64px' }}>
+        <div
+          style={{
+            background: 'var(--accent)',
+            borderRadius: 20,
+            padding: '48px 40px',
+            textAlign: 'center',
+            color: '#fff',
+          }}
+        >
+          <svg width="32" height="32" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-4" style={{ opacity: .7 }}>
+            <use href="#i-leaf" />
+          </svg>
+          <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 8px', letterSpacing: '-.01em' }}>
+            Vous connaissez une balade carrossable ?
+          </h2>
+          <p style={{ fontSize: 15, opacity: .8, marginBottom: 24, maxWidth: '42ch', margin: '0 auto 24px' }}>
+            Partagez-la avec la communauté. Nous l'ajouterons après vérification.
           </p>
           <a
             href="/proposer"
-            className="inline-block px-6 py-3 rounded-full bg-white text-green-800 font-bold text-sm hover:bg-green-50 transition-colors shadow-md"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '12px 24px',
+              borderRadius: 999,
+              background: '#fff',
+              color: 'var(--accent-ink)',
+              fontWeight: 700,
+              fontSize: 14,
+            }}
           >
+            <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+              <use href="#i-plus" />
+            </svg>
             Proposer une balade
           </a>
         </div>
       </section>
 
-      {/* About section */}
-      <section id="about" className="bg-green-50 border-t border-green-100 py-16 px-4 mt-8">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+      {/* ── ABOUT ────────────────────────────────────────── */}
+      <section id="about" style={{ borderTop: '1px solid var(--line)', padding: '64px 32px', background: 'var(--surface)' }}>
+        <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
+          <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-.015em', marginBottom: 8, color: 'var(--ink)' }}>
             Comment fonctionne la classification ?
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8 text-left">
-            {[
-              {
-                icon: '🐣',
-                title: 'Peu carrossable',
-                desc: 'Sentiers avec obstacles, cailloux, forte pente. Poussette tout-terrain obligatoire et effort physique important.',
-                color: 'border-red-200 bg-red-50',
-              },
-              {
-                icon: '🐣🐣',
-                title: 'Carrossable',
-                desc: 'Chemin en terre ou stabilisé. Poussette robuste conseillée. Quelques passages délicats mais praticable.',
-                color: 'border-amber-200 bg-amber-50',
-              },
-              {
-                icon: '🐣🐣🐣',
-                title: 'Très carrossable',
-                desc: 'Chemin asphalté, piste cyclable ou allée large et lisse. Toutes les poussettes passent sans difficulté.',
-                color: 'border-green-200 bg-green-50',
-              },
-            ].map(({ icon, title, desc, color }) => (
-              <div key={title} className={`rounded-2xl border p-5 ${color}`}>
-                <p className="text-2xl mb-2">{icon}</p>
-                <h3 className="font-bold text-gray-900 mb-1">{title}</h3>
-                <p className="text-sm text-gray-600">{desc}</p>
-              </div>
-            ))}
+          <p style={{ fontSize: 15, color: 'var(--ink-3)', marginBottom: 40 }}>
+            Chaque balade est notée de 1 à 3 roues selon l'accessibilité du terrain.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+            {([1, 2, 3] as const).map((level) => {
+              const labels = ['Peu carrossable', 'Carrossable', 'Très carrossable']
+              const descs = [
+                'Sentiers avec obstacles, forte pente, terrain naturel. Poussette tout-terrain obligatoire.',
+                'Chemin en terre ou stabilisé. Poussette robuste conseillée. Quelques passages délicats.',
+                'Piste asphaltée, voie verte, allée large et lisse. Toutes les poussettes passent.',
+              ]
+              return (
+                <div
+                  key={level}
+                  style={{
+                    borderRadius: 14,
+                    border: '1px solid var(--line)',
+                    padding: '20px',
+                    background: 'var(--bg)',
+                  }}
+                >
+                  <div className="mb-3 flex items-center gap-2">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--accent)' }}>
+                      <use href="#i-pram-wheel" />
+                    </svg>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-3)', letterSpacing: '.04em', textTransform: 'uppercase' }}>
+                      Niveau {level}
+                    </span>
+                  </div>
+                  <p style={{ fontWeight: 700, fontSize: 15, color: 'var(--ink)', marginBottom: 6 }}>{labels[level - 1]}</p>
+                  <p style={{ fontSize: 13, color: 'var(--ink-3)', lineHeight: 1.5 }}>{descs[level - 1]}</p>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>

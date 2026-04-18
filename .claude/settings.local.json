@@ -6,7 +6,12 @@
       "Bash(git:*)",
       "Bash(vercel:*)",
       "Bash(ls:*)",
-      "Bash(gh api:*)"
+      "Bash(gh api:*)",
+      "Bash(cp \"/Users/leocarel-nehr/.claude/projects/-Users-leocarel-nehr-Desktop-github-carrosable/8717adee-d6b2-4a1b-9f8c-8be092d36391/tool-results/webfetch-1776512596086-xfum0o.bin\" /tmp/carrossable.gz)",
+      "Bash(gunzip -f /tmp/carrossable.gz)",
+      "Read(//tmp/**)",
+      "Bash(tar -tf /tmp/carrossable)",
+      "Bash(tar -xf /tmp/carrossable -C /tmp/)"
     ]
   }
 }

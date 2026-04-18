@@ -1,6 +1,5 @@
 import { Trail } from '@/types'
 import StrollerBadge from './StrollerBadge'
-import { MapPin, Clock, TrendingUp, Route } from 'lucide-react'
 
 interface TrailCardProps {
   trail: Trail
@@ -13,56 +12,114 @@ export default function TrailCard({ trail, avgRating = 0, reviewCount = 0, voteC
   return (
     <a
       href={`/balades/${trail.id}`}
-      className="group block bg-white rounded-2xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-200 hover:-translate-y-0.5 p-5"
+      className="group block"
+      style={{
+        background: 'var(--surface)',
+        border: '1px solid var(--line)',
+        borderRadius: 14,
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        boxShadow: 'var(--shadow-sm)',
+        transition: 'transform .2s ease, border-color .2s ease, box-shadow .2s ease',
+      }}
     >
-      <div className="flex items-start justify-between gap-3 mb-2">
-        <h3 className="font-bold text-gray-900 group-hover:text-green-700 transition-colors leading-tight line-clamp-2 text-base">
-          {trail.name}
-        </h3>
+      {/* Media area — neutral striped pattern */}
+      <div
+        className="striped relative"
+        style={{ aspectRatio: '4/3', borderBottom: '1px solid var(--line)' }}
+      >
+        {/* Rating badge */}
+        <div
+          className="absolute bottom-3 left-3 flex items-center gap-1.5"
+          style={{
+            background: 'rgba(255,255,255,.95)',
+            border: '1px solid var(--line)',
+            borderRadius: 999,
+            padding: '5px 10px',
+            fontSize: 12,
+            fontWeight: 600,
+            color: 'var(--accent-ink)',
+          }}
+        >
+          <StrollerBadge level={trail.strollerLevel} showLabel={true} />
+        </div>
+
         {voteCount > 0 && (
-          <span className="shrink-0 text-xs font-semibold text-gray-500 bg-gray-100 rounded-full px-2 py-0.5">
+          <div
+            className="absolute top-3 right-3"
+            style={{
+              background: 'rgba(255,255,255,.92)',
+              border: '1px solid var(--line)',
+              borderRadius: 999,
+              padding: '4px 10px',
+              fontSize: 12,
+              fontWeight: 600,
+              color: 'var(--ink-2)',
+            }}
+          >
             👍 {voteCount}
-          </span>
-        )}
-      </div>
-
-      <div className="flex items-center gap-1 text-gray-500 text-sm mb-4">
-        <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
-        <span className="truncate">{trail.location}, {trail.region}</span>
-      </div>
-
-      <div className="flex items-center gap-4 text-xs text-gray-500 mb-4">
-        <span className="flex items-center gap-1">
-          <Route className="w-3.5 h-3.5" />
-          {trail.distance} km
-        </span>
-        <span className="flex items-center gap-1">
-          <Clock className="w-3.5 h-3.5" />
-          {trail.duration}
-        </span>
-        <span className="flex items-center gap-1">
-          <TrendingUp className="w-3.5 h-3.5" />
-          +{trail.elevation} m
-        </span>
-      </div>
-
-      <div className="flex items-center justify-between">
-        <StrollerBadge level={trail.strollerLevel} size="sm" />
-        {avgRating > 0 && (
-          <div className="flex items-center gap-1">
-            <span className="text-amber-400 text-sm">★</span>
-            <span className="text-sm font-semibold text-gray-700">{avgRating.toFixed(1)}</span>
-            <span className="text-xs text-gray-400">({reviewCount})</span>
           </div>
         )}
       </div>
 
-      <div className="flex flex-wrap gap-1 mt-3">
-        {trail.tags.slice(0, 3).map((tag) => (
-          <span key={tag} className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded-full">
-            #{tag}
+      {/* Card body */}
+      <div style={{ padding: '18px 18px 20px', display: 'flex', flexDirection: 'column', gap: 10, flex: 1 }}>
+        {/* Location */}
+        <div className="flex items-center gap-1.5" style={{ fontSize: 12, color: 'var(--ink-3)', fontWeight: 500, letterSpacing: '.01em', textTransform: 'uppercase' }}>
+          <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--ink-4)', flexShrink: 0 }}>
+            <use href="#i-pin" />
+          </svg>
+          {trail.location}, {trail.region}
+        </div>
+
+        {/* Title */}
+        <h3 style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-.015em', margin: 0, color: 'var(--ink)' }} className="group-hover:text-[var(--accent)] transition-colors line-clamp-2">
+          {trail.name}
+        </h3>
+
+        {/* Tags */}
+        <div className="flex flex-wrap gap-1.5">
+          {trail.tags.slice(0, 3).map((tag) => (
+            <span key={tag} style={{ fontSize: 12, color: 'var(--ink-3)' }}>
+              <span style={{ color: 'var(--ink-4)' }}>#</span>{tag}
+            </span>
+          ))}
+        </div>
+
+        {/* Meta stats */}
+        <div
+          className="flex items-center gap-4 mt-auto"
+          style={{ paddingTop: 12, borderTop: '1px solid var(--line-2)', fontSize: 13, fontWeight: 500, color: 'var(--ink-2)' }}
+        >
+          <span className="flex items-center gap-1.5">
+            <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--ink-3)' }}>
+              <use href="#i-route" />
+            </svg>
+            {trail.distance} km
           </span>
-        ))}
+          <span className="flex items-center gap-1.5">
+            <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--ink-3)' }}>
+              <use href="#i-clock" />
+            </svg>
+            {trail.duration}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--ink-3)' }}>
+              <use href="#i-elev" />
+            </svg>
+            +{trail.elevation} m
+          </span>
+          {avgRating > 0 && (
+            <span className="ml-auto flex items-center gap-1" style={{ color: 'var(--ink-3)' }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none" style={{ color: '#f59e0b' }}>
+                <use href="#i-star" />
+              </svg>
+              <span style={{ fontWeight: 600, color: 'var(--ink-2)' }}>{avgRating.toFixed(1)}</span>
+              <span style={{ color: 'var(--ink-4)', fontSize: 12 }}>({reviewCount})</span>
+            </span>
+          )}
+        </div>
       </div>
     </a>
   )
