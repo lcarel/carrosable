@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic'
 import { trails, getTrailById } from '@/data/trails'
 import { Review } from '@/types'
 import StrollerBadge, { StrollerLevelInfo } from '@/components/StrollerBadge'
-import TrailPlaceholder from '@/components/TrailPlaceholder'
 import VoteButton from '@/components/VoteButton'
 import ReviewForm from '@/components/ReviewForm'
 import ReviewList from '@/components/ReviewList'
@@ -59,21 +58,15 @@ export default function TrailPage({ params }: PageProps) {
         Retour aux balades
       </a>
 
-      {/* Hero banner */}
-      <div className="relative h-72 sm:h-96 rounded-3xl overflow-hidden mb-8 shadow-lg">
-        <TrailPlaceholder level={trail.strollerLevel} className="absolute inset-0" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-        <div className="absolute bottom-6 left-6 right-6">
-          <div className="mb-2">
-            <StrollerBadge level={trail.strollerLevel} size="md" />
-          </div>
-          <h1 className="text-white text-3xl font-bold leading-tight drop-shadow">{trail.name}</h1>
-          <div className="flex items-center gap-2 mt-1 text-white/90 text-sm">
-            <MapPin className="w-4 h-4" />
-            <span>
-              {trail.location}, {trail.region}
-            </span>
-          </div>
+      {/* Header */}
+      <div className="mb-8">
+        <div className="mb-3">
+          <StrollerBadge level={trail.strollerLevel} size="md" />
+        </div>
+        <h1 className="text-3xl font-bold text-gray-900 leading-tight mb-2">{trail.name}</h1>
+        <div className="flex items-center gap-2 text-gray-500 text-sm">
+          <MapPin className="w-4 h-4" />
+          <span>{trail.location}, {trail.region}</span>
         </div>
       </div>
 
@@ -194,10 +187,7 @@ export default function TrailPage({ params }: PageProps) {
                     href={`/balades/${t.id}`}
                     className="flex items-center gap-3 p-3 bg-white rounded-xl border border-gray-100 hover:border-green-200 hover:bg-green-50 transition-all group"
                   >
-                    <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
-                      <TrailPlaceholder level={t.strollerLevel} className="absolute inset-0" showEmoji={false} />
-                    </div>
-                    <div className="min-w-0">
+                      <div className="min-w-0">
                       <p className="text-sm font-medium text-gray-900 group-hover:text-green-700 truncate leading-tight">
                         {t.name}
                       </p>
