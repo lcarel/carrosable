@@ -189,8 +189,8 @@ export default function ProposerPage() {
       e.elevation = 'Dénivelé invalide.'
     if (!form.duration.trim()) e.duration = 'La durée est requise (ex : 1h30).'
     if (!form.strollerLevel) e.strollerLevel = 'Choisissez un niveau.'
-    if (!form.lat || isNaN(Number(form.lat))) e.lat = 'Latitude invalide.'
-    if (!form.lng || isNaN(Number(form.lng))) e.lng = 'Longitude invalide.'
+    if (form.lat && isNaN(Number(form.lat))) e.lat = 'Latitude invalide.'
+    if (form.lng && isNaN(Number(form.lng))) e.lng = 'Longitude invalide.'
     return e
   }
 
@@ -597,7 +597,7 @@ export default function ProposerPage() {
         <div style={card}>
           <CardHead
             icon="i-gps"
-            title={<>Coordonnées GPS <span style={{ color: 'var(--accent)', marginLeft: 2 }}>*</span></>}
+            title={<>Coordonnées GPS <span style={{ color: 'var(--ink-4)', fontWeight: 500, fontSize: 14 }}>(facultatif)</span></>}
             sub="Point de départ du parcours"
           />
 
@@ -628,13 +628,11 @@ export default function ProposerPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
             {[
-              { f: 'lat' as const, label: 'Latitude', placeholder: '48.8566' },
-              { f: 'lng' as const, label: 'Longitude', placeholder: '2.3522' },
+              { f: 'lat' as const, label: 'Latitude', placeholder: '48.8566', req: false },
+              { f: 'lng' as const, label: 'Longitude', placeholder: '2.3522', req: false },
             ].map(({ f, label, placeholder }) => (
               <div key={f} style={field}>
-                <label style={labelCss}>
-                  {label} <span style={{ color: 'var(--accent)' }}>*</span>
-                </label>
+                <label style={labelCss}>{label}</label>
                 <div style={{ position: 'relative' }}>
                   <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--ink-4)', display: 'flex' }}>
                     <Icon id="i-pin" size={15} />
