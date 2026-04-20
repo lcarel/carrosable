@@ -95,12 +95,57 @@ function IconSprite() {
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
         </symbol>
         <symbol id="i-thumb-up" viewBox="0 0 24 24">
-          <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z" />
-          <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
+          <path d="M7 11v9H4v-9zM7 11l4-7a2 2 0 0 1 2 2v3h5a2 2 0 0 1 2 2.3l-1 6a2 2 0 0 1-2 1.7H7" />
         </symbol>
         <symbol id="i-thumb-down" viewBox="0 0 24 24">
-          <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z" />
-          <path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
+          <path d="M17 13V4h3v9zM17 13l-4 7a2 2 0 0 1-2-2v-3H6a2 2 0 0 1-2-2.3l1-6A2 2 0 0 1 7 5h10" />
+        </symbol>
+        <symbol id="i-chat" viewBox="0 0 24 24">
+          <path d="M4 5h16v11H8l-4 4z" /><path d="M8 10h8M8 13h5" />
+        </symbol>
+        <symbol id="i-share" viewBox="0 0 24 24">
+          <circle cx="6" cy="12" r="2.5" /><circle cx="18" cy="6" r="2.5" /><circle cx="18" cy="18" r="2.5" />
+          <path d="M8.2 11l7.6-4M8.2 13l7.6 4" />
+        </symbol>
+        <symbol id="i-flag" viewBox="0 0 24 24">
+          <path d="M5 21V4M5 4h12l-2 4 2 4H5" />
+        </symbol>
+        <symbol id="i-check" viewBox="0 0 24 24">
+          <path d="M5 12l4 4 10-10" />
+        </symbol>
+        <symbol id="i-stroller-narrow" viewBox="0 0 24 24">
+          <path d="M5 4h2l3 7M19 8a5 5 0 0 0-5-5h-3l3 8h7" />
+          <circle cx="9" cy="18" r="2" /><circle cx="17" cy="18" r="2" /><path d="M11 11l-1 5" />
+        </symbol>
+        <symbol id="i-stroller-wide" viewBox="0 0 24 24">
+          <rect x="6" y="6" width="14" height="6" rx="1" /><path d="M4 6h2v6" />
+          <circle cx="9" cy="18" r="2" /><circle cx="17" cy="18" r="2" />
+        </symbol>
+        <symbol id="i-baby-carrier" viewBox="0 0 24 24">
+          <path d="M7 4h10l-2 8a4 4 0 0 1-8 0z" /><circle cx="12" cy="16" r="3" />
+        </symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4" />
+        </symbol>
+        <symbol id="i-tree" viewBox="0 0 24 24">
+          <path d="M12 3l5 7h-3l4 6H6l4-6H7z" /><path d="M12 16v5" />
+        </symbol>
+        <symbol id="i-water" viewBox="0 0 24 24">
+          <path d="M12 3s7 8 7 13a7 7 0 1 1-14 0c0-5 7-13 7-13z" />
+        </symbol>
+        <symbol id="i-info" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" /><path d="M12 8v1M12 11v5" />
+        </symbol>
+        <symbol id="i-text" viewBox="0 0 24 24">
+          <path d="M4 6h16M4 10h16M4 14h10" />
+        </symbol>
+        <symbol id="i-gps" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+          <circle cx="12" cy="12" r="8" strokeDasharray="3 3" />
+        </symbol>
+        <symbol id="i-shield" viewBox="0 0 24 24">
+          <path d="M12 3l8 3.5v5c0 4.5-3.5 8.5-8 10-4.5-1.5-8-5.5-8-10v-5z" />
         </symbol>
       </defs>
     </svg>
