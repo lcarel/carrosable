@@ -200,6 +200,139 @@ export const trails: Trail[] = [
     lng: 5.0975,
   },
 },
+
+
+{
+  id: 'balade-bolmon-marignane-parentcool',
+  name: "Balade des familles — Étang du Bolmon",
+  location: 'Marignane',
+  region: 'Bouches-du-Rhône',
+  description:
+    "Promenade aménagée au bord de l'étang du Bolmon, pensée pour les familles. " +
+    'Sentier balisé avec panneaux pédagogiques sur la faune et la flore locales, ' +
+    'et un observatoire ornithologique. Accessible en poussette, gratuit toute l\'année. ' +
+    "Départ depuis l'avenue Edmond Rostand, parking à proximité.",
+  distance: 3,
+  elevation: 0,
+  duration: '1h00',
+  strollerLevel: 3,
+  tags: ['étang', 'nature', 'oiseaux', 'pédagogique', 'plat', 'gratuit', 'accessible PMR'],
+  imageUrl: 'https://parentcool.fr/cool_medias/2026/02/balade-familles-bolmon-marignane-nature.jpg',
+  coordinates: {
+    lat: 43.4180,
+    lng: 5.2150,
+  },
+},
+
+// ============================================================
+// 3. Sentier Paluns–Patafloux–Barlatier — Marignane
+// Source : https://parentcool.fr/annuaire/sentier-paluns-patafloux-barlatier-marignane/
+// Tags parentcool : (pas de tag poussette — poussette tout-terrain conseillée)
+// ============================================================
+{
+  id: 'sentier-paluns-patafloux-marignane-parentcool',
+  name: 'Sentier Paluns – Patafloux – Barlatier',
+  location: 'Marignane',
+  region: 'Bouches-du-Rhône',
+  description:
+    "Balade nature gratuite au cœur d'une zone humide préservée entre canaux, pinède et espaces ouverts. " +
+    'Le sentier relie plusieurs observatoires ornithologiques pour observer oiseaux et biodiversité locale. ' +
+    'Accessible en poussette tout-terrain sur certaines portions. ' +
+    'Départ depuis le parking du chemin des Macreuses, secteur Patafloux.',
+  distance: 4,
+  elevation: 10,
+  duration: '1h30',
+  strollerLevel: 2,
+  tags: ['zone humide', 'oiseaux', 'pinède', 'observatoire', 'nature', 'gratuit', 'pédagogique'],
+  imageUrl: 'https://parentcool.fr/cool_medias/2026/02/Sentier-Paluns-parent-cool.jpg',
+  coordinates: {
+    lat: 43.4050,
+    lng: 5.2050,
+  },
+},
+
+// ============================================================
+// 4. Domaine de Valabre — Gardanne
+// Source : https://parentcool.fr/annuaire/domaine-valabre-gardanne/
+// Tags parentcool : (poussette possible sur certains axes)
+// ============================================================
+{
+  id: 'domaine-valabre-gardanne-parentcool',
+  name: 'Domaine de Valabre',
+  location: 'Gardanne',
+  region: 'Bouches-du-Rhône',
+  description:
+    'Vaste domaine de 150 hectares de forêts et de collines méditerranéennes entre ' +
+    'Aix-en-Provence et Marseille. Accueille l\'Écomusée de la forêt méditerranéenne ' +
+    'et des sentiers accessibles en poussette sur certains axes. ' +
+    "Idéal pour une sortie nature pédagogique en famille. " +
+    'Départ : Chemin du Moulin du Fort, Gardanne.',
+  distance: 4,
+  elevation: 50,
+  duration: '1h15',
+  strollerLevel: 2,
+  tags: ['forêt méditerranéenne', 'nature', 'écomusée', 'pédagogique', 'collines', 'gratuit'],
+  imageUrl: 'https://parentcool.fr/cool_medias/2026/02/Domaine-de-Valabre-parent-cool.jpg',
+  coordinates: {
+    lat: 43.4670,
+    lng: 5.4720,
+  },
+},
+
+// ============================================================
+// 5. Parc du Bocage — Plan-de-Cuques
+// Source : https://parentcool.fr/annuaire/parc-bocage-plan-de-cuques/
+// Tags parentcool : Accessible poussette · Accès PMR
+// ============================================================
+{
+  id: 'parc-bocage-plan-de-cuques-parentcool',
+  name: 'Parc du Bocage',
+  location: 'Plan-de-Cuques',
+  region: 'Bouches-du-Rhône',
+  description:
+    'Parc municipal apprécié des familles avec de vastes espaces verts, des zones d\'activités ' +
+    'et des coins calmes pour se détendre ou pique-niquer. ' +
+    'Chemins relativement praticables en poussette. Parking à proximité. ' +
+    'Accès libre toute l\'année. Vigilance conseillée à proximité du bord de rivière.',
+  distance: 2,
+  elevation: 10,
+  duration: '0h45',
+  strollerLevel: 2,
+  tags: ['parc', 'nature', 'pique-nique', 'rivière', 'famille', 'gratuit', 'accessible PMR'],
+  imageUrl: 'https://parentcool.fr/cool_medias/2026/02/parc-du-bocage-parent-cool.jpg',
+  coordinates: {
+    lat: 43.3490,
+    lng: 5.4470,
+  },
+},
+
+// ============================================================
+// 6. Parc de la Montade — Plan-de-Cuques
+// Source : https://parentcool.fr/annuaire/parc-montade-plan-de-cuques/
+// Tags parentcool : Accessible poussette · Aire de jeux
+// ============================================================
+{
+  id: 'parc-montade-plan-de-cuques-parentcool',
+  name: 'Parc de la Montade',
+  location: 'Plan-de-Cuques',
+  region: 'Bouches-du-Rhône',
+  description:
+    'Parc verdoyant sur les hauteurs de Plan-de-Cuques avec des chemins tranquilles, ' +
+    'un environnement arboré et des vues dégagées sur les environs. ' +
+    'Adapté aux enfants dès 3 ans. Chemins parfois irréguliers, préférer une poussette robuste. ' +
+    'Accès libre et gratuit toute l\'année. Adresse : 4 Rue André Bailet.',
+  distance: 2,
+  elevation: 30,
+  duration: '0h45',
+  strollerLevel: 2,
+  tags: ['parc', 'nature', 'arboré', 'vue', 'calme', 'gratuit', 'hauteurs'],
+  imageUrl: 'https://parentcool.fr/cool_medias/2026/02/inauguration_parc_de_la_montade_42.jpg',
+  coordinates: {
+    lat: 43.3530,
+    lng: 5.4490,
+  },
+},
+
 ]
 
 export function getTrailById(id: string): Trail | undefined {
