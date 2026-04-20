@@ -73,7 +73,7 @@ export const trails: Trail[] = [
   distance: 2,
   elevation: 10,
   duration: '0h45',
-  strollerLevel: 3,
+  strollerLevel: 2,
   tags: ['parc', 'asphalte', 'ombragé', 'urbain', 'jardin botanique', 'aire de jeux'],
   coordinates: {
     lat: 43.3037,
