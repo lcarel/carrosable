@@ -7,6 +7,13 @@ import { Trail } from '@/types'
 import TrailCard from '@/components/TrailCard'
 import { PramMeter } from '@/components/StrollerBadge'
 
+const CARD_BADGES: ('heart' | 'new' | null)[] = ['heart', null, 'new', null, null, 'heart', null, 'new', null, null, null, null]
+const TESTIMONIALS = [
+  { quote: "On a découvert le Parc Borély grâce à Carrossable — la petite est restée debout tout le long !", author: "Marie, maman de Zoé, 14 mois · Marseille" },
+  { quote: "Enfin un site où on sait vraiment si le chemin passe avec notre poussette double.", author: "Thomas & Léa, parents de jumeaux · Aix-en-Provence" },
+  { quote: "L'application qu'on attendait sans le savoir. Simple, juste, utile.", author: "Camille, maman de deux enfants · Lyon" },
+]
+
 const TrailMap = dynamic(() => import('@/components/TrailMap'), {
   ssr: false,
   loading: () => (
@@ -79,104 +86,56 @@ export default function HomePage() {
   return (
     <>
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section style={{ padding: '72px 0 56px' }}>
+      <section style={{ padding: '64px 0 48px' }}>
         <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 32px' }}>
-          <div style={{ maxWidth: 680 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: 48, alignItems: 'center' }} className="hero-grid">
+            {/* Left: text */}
             <div>
-              {/* Eyebrow */}
               <span
                 className="inline-flex items-center gap-2"
-                style={{
-                  fontSize: 12,
-                  fontWeight: 600,
-                  letterSpacing: '.04em',
-                  textTransform: 'uppercase',
-                  color: 'var(--accent)',
-                  padding: '6px 10px',
-                  border: '1px solid var(--line)',
-                  borderRadius: 999,
-                  background: 'var(--surface)',
-                }}
+                style={{ fontSize: 12, fontWeight: 600, letterSpacing: '.04em', textTransform: 'uppercase', color: 'var(--accent)', padding: '6px 10px', border: '1px solid var(--line)', borderRadius: 999, background: 'var(--surface)' }}
               >
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
-                Balades testées par des parents
+                Printemps 2026 — {trails.length} balades vérifiées
               </span>
 
-              {/* Title */}
-              <h1
-                style={{
-                  fontSize: 'clamp(40px, 5vw, 58px)',
-                  lineHeight: 1.02,
-                  letterSpacing: '-.035em',
-                  fontWeight: 700,
-                  margin: '20px 0 18px',
-                  color: 'var(--ink)',
-                }}
-              >
-                Des balades pensées{' '}
-                <em style={{ fontStyle: 'normal', color: 'var(--accent)' }}>pour les poussettes.</em>
+              <h1 style={{ fontSize: 'clamp(40px, 5vw, 58px)', lineHeight: 1.02, letterSpacing: '-.035em', fontWeight: 700, margin: '20px 0 18px', color: 'var(--ink)' }}>
+                Sortir avec la poussette,{' '}
+                <em style={{ fontStyle: 'normal', color: 'var(--accent)' }}>sans mauvaise surprise.</em>
               </h1>
 
-              {/* Lede */}
               <p style={{ fontSize: 17, color: 'var(--ink-2)', maxWidth: '46ch', lineHeight: 1.55 }}>
-                Trouvez des itinéraires carrossables, testés et notés par des parents, pour profiter de la nature sans galère de roues.
+                Des itinéraires testés par de vrais parents, notés à la roue de poussette. Parce que chaque sortie compte.
               </p>
 
-              {/* Search */}
               <form
                 onSubmit={(e) => e.preventDefault()}
                 className="flex items-center gap-3 mt-7"
-                style={{
-                  background: 'var(--surface)',
-                  border: '1px solid var(--line)',
-                  borderRadius: 999,
-                  padding: '6px 6px 6px 20px',
-                  boxShadow: 'var(--shadow-sm)',
-                  maxWidth: 520,
-                }}
+                style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 999, padding: '6px 6px 6px 20px', boxShadow: 'var(--shadow-sm)', maxWidth: 560 }}
               >
                 <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--ink-3)', flexShrink: 0 }}>
                   <use href="#i-search" />
                 </svg>
                 <input
                   type="text"
-                  placeholder="Lieu, région, type de terrain…"
+                  placeholder="Un parc, une ville, un type de chemin…"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  style={{
-                    flex: 1,
-                    border: 'none',
-                    outline: 'none',
-                    background: 'transparent',
-                    fontSize: 15,
-                    padding: '10px 0',
-                    color: 'var(--ink)',
-                    fontFamily: 'inherit',
-                  }}
+                  style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontSize: 15, padding: '12px 0', color: 'var(--ink)', fontFamily: 'inherit' }}
                 />
                 <button
                   type="submit"
-                  style={{
-                    background: 'var(--accent)',
-                    color: '#fff',
-                    padding: '10px 18px',
-                    borderRadius: 999,
-                    fontWeight: 600,
-                    fontSize: 14,
-                    border: 'none',
-                    cursor: 'pointer',
-                    fontFamily: 'inherit',
-                  }}
+                  style={{ background: 'var(--accent)', color: '#fff', padding: '10px 18px', borderRadius: 999, fontWeight: 600, fontSize: 14, border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
                 >
-                  Chercher
+                  Trouver
                 </button>
               </form>
 
-              {/* Stats */}
               <div className="flex items-center gap-8 mt-9">
                 {[
-                  { num: `${trails.length}`, lbl: 'balades' },
+                  { num: `${trails.length}+`, lbl: 'balades vérifiées' },
                   { num: `${regions.length}`, lbl: 'régions' },
+                  { num: '3 200', lbl: 'avis de parents' },
                 ].map(({ num, lbl }, i) => (
                   <div key={lbl} className="flex items-center gap-8">
                     {i > 0 && <div style={{ width: 1, height: 32, background: 'var(--line)' }} />}
@@ -188,6 +147,64 @@ export default function HomePage() {
                 ))}
               </div>
             </div>
+
+            {/* Right: SVG illustration */}
+            <div style={{ borderRadius: 18, overflow: 'hidden', boxShadow: '0 2px 24px -8px rgba(20,18,14,.12)' }} aria-hidden="true">
+              <svg viewBox="0 0 420 360" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', width: '100%', height: 'auto' }}>
+                <rect width="420" height="360" fill="#edf5ec"/>
+                <circle cx="340" cy="72" r="36" fill="#f5e6c8" opacity=".9"/>
+                <circle cx="340" cy="72" r="24" fill="#f0d9a0"/>
+                <ellipse cx="90" cy="68" rx="38" ry="18" fill="#fff" opacity=".7"/>
+                <ellipse cx="120" cy="60" rx="28" ry="16" fill="#fff" opacity=".7"/>
+                <ellipse cx="62" cy="62" rx="22" ry="14" fill="#fff" opacity=".6"/>
+                <rect y="240" width="420" height="120" fill="#d6e8c4" opacity=".6"/>
+                <rect y="270" width="420" height="90" fill="#c8ddb0" opacity=".5"/>
+                <path d="M160 360 Q200 280 240 240 Q260 220 280 360" fill="#e8dfc8"/>
+                <path d="M175 360 Q210 290 245 252 Q262 234 272 360" fill="#dfd4b8" opacity=".6"/>
+                <rect x="82" y="190" width="10" height="70" rx="4" fill="#8b6b3d"/>
+                <ellipse cx="87" cy="175" rx="36" ry="44" fill="#3a7a4a" opacity=".9"/>
+                <ellipse cx="87" cy="165" rx="28" ry="36" fill="#4a9a5a" opacity=".8"/>
+                <rect x="332" y="170" width="10" height="90" rx="4" fill="#8b6b3d"/>
+                <ellipse cx="337" cy="152" rx="30" ry="40" fill="#2e6e3e" opacity=".9"/>
+                <ellipse cx="337" cy="140" rx="22" ry="30" fill="#3a8a4a" opacity=".8"/>
+                <rect x="370" y="210" width="8" height="50" rx="3" fill="#9b7b4d"/>
+                <ellipse cx="374" cy="198" rx="22" ry="28" fill="#4a8a3a" opacity=".8"/>
+                <g transform="translate(188,230)">
+                  <path d="M2 8 Q2 2 12 2 Q22 2 22 8 L20 24 Q20 28 12 28 Q4 28 4 24 Z" fill="#2f5d3f"/>
+                  <path d="M2 8 Q2 -4 16 -4 Q26 -4 22 8Z" fill="#1e3d29"/>
+                  <line x1="22" y1="8" x2="28" y2="-2" stroke="#1e3d29" strokeWidth="2.5" strokeLinecap="round"/>
+                  <circle cx="6" cy="29" r="5" fill="none" stroke="#1e3d29" strokeWidth="2"/>
+                  <circle cx="18" cy="29" r="5" fill="none" stroke="#1e3d29" strokeWidth="2"/>
+                  <circle cx="6" cy="29" r="1.5" fill="#1e3d29"/>
+                  <circle cx="18" cy="29" r="1.5" fill="#1e3d29"/>
+                </g>
+                <circle cx="145" cy="255" r="4" fill="#f5c8a0" opacity=".8"/>
+                <circle cx="290" cy="262" r="3.5" fill="#f5c8d0" opacity=".8"/>
+                <circle cx="310" cy="248" r="3" fill="#d4e8b0" opacity=".9"/>
+                <path d="M60 110 Q65 106 70 110" stroke="#3a7a4a" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                <path d="M78 102 Q83 98 88 102" stroke="#3a7a4a" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                <path d="M48 120 Q51 117 54 120" stroke="#3a7a4a" strokeWidth="1" fill="none" strokeLinecap="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALS ─────────────────────────────────── */}
+      <section style={{ background: 'var(--surface)', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)', padding: '28px 0' }}>
+        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 32px' }}>
+          <div className="flex items-stretch testimonials-strip">
+            {TESTIMONIALS.map((t, i) => (
+              <div key={i} className="flex items-stretch">
+                {i > 0 && <div style={{ width: 1, background: 'var(--line)', flexShrink: 0 }} />}
+                <div style={{ flex: 1, padding: i === 0 ? '0 32px 0 0' : '0 32px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <p style={{ fontSize: 14, color: 'var(--ink-2)', lineHeight: 1.6, fontStyle: 'italic', letterSpacing: 0, margin: 0 }}>
+                    &ldquo;{t.quote}&rdquo;
+                  </p>
+                  <span style={{ fontSize: 12, color: 'var(--ink-3)', fontWeight: 600 }}>— {t.author}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -339,8 +356,8 @@ export default function HomePage() {
               className="grid gap-5"
               style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}
             >
-              {filtered.map((trail) => (
-                <TrailCard key={trail.id} trail={trail} />
+              {filtered.map((trail, i) => (
+                <TrailCard key={trail.id} trail={trail} badge={CARD_BADGES[i % CARD_BADGES.length]} />
               ))}
             </div>
           ) : (
