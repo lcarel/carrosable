@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { trails, getTrailById } from '@/data/trails'
 import { Review } from '@/types'
-import StrollerBadge, { StrollerLevelInfo, PramMeter } from '@/components/StrollerBadge'
+import { PramMeter } from '@/components/StrollerBadge'
 import VoteButton from '@/components/VoteButton'
 import ReviewForm from '@/components/ReviewForm'
 import ReviewList from '@/components/ReviewList'
@@ -33,18 +33,6 @@ function Icon({ id, size = 16 }: { id: string; size?: number }) {
   )
 }
 
-function Stars({ value, size = 13 }: { value: number; size?: number }) {
-  return (
-    <span style={{ display: 'inline-flex', gap: 1 }}>
-      {[1, 2, 3, 4, 5].map((i) => (
-        <svg key={i} width={size} height={size} viewBox="0 0 24 24" fill={i <= value ? '#f5a623' : 'none'} stroke="#f5a623" strokeWidth={1.5}>
-          <use href="#i-star" />
-        </svg>
-      ))}
-    </span>
-  )
-}
-
 export default function TrailPage({ params }: PageProps) {
   const trail = getTrailById(params.id)
   const [reviews, setReviews] = useState<Review[]>([])
@@ -60,156 +48,128 @@ export default function TrailPage({ params }: PageProps) {
 
   if (!trail) return notFound()
 
-  const avgRating =
-    reviews.length > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0
-
   const handleNewReview = async (review: Omit<Review, 'id' | 'date'>) => {
     const saved = await addReview(review)
     setReviews((prev) => [saved, ...prev])
   }
 
   return (
-    <div style={{ maxWidth: 1080, margin: '0 auto', padding: '32px 24px 96px' }}>
+    <div style={{ maxWidth: 1080, margin: '0 auto', padding: '0 32px 96px' }}>
 
       {/* Breadcrumb */}
-      <nav style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--ink-3)', marginBottom: 24 }}>
-        <a href="/" style={{ color: 'var(--ink-3)', textDecoration: 'none' }} className="hover:text-[var(--accent)] transition-colors">
-          Balades
+      <nav style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--ink-3)', padding: '24px 0 8px' }}>
+        <a href="/" style={{ display: 'inline-flex', alignItems: 'center' }}>
+          <Icon id="i-back" size={14} />
         </a>
-        <span style={{ color: 'var(--line)' }}>/</span>
-        <span style={{ color: 'var(--ink-2)', fontWeight: 500 }}>{trail.name}</span>
+        <a href="/" className="hover:text-[var(--ink)] transition-colors">Explorer</a>
+        <Icon id="i-chev" size={12} />
+        <a href="/" className="hover:text-[var(--ink)] transition-colors">{trail.region}</a>
+        <Icon id="i-chev" size={12} />
+        <span style={{ color: 'var(--ink-2)' }}>{trail.name}</span>
       </nav>
 
       {/* Page header */}
-      <header style={{ marginBottom: 28 }}>
-        {/* Meta row */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 14 }}>
-          <StrollerBadge level={trail.strollerLevel} size="md" />
-          <span style={{ width: 1, height: 16, background: 'var(--line)', flexShrink: 0 }} />
-          <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 13, color: 'var(--ink-3)' }}>
-            <Icon id="i-pin" size={13} />
-            {trail.location}, {trail.region}
-          </span>
-          {avgRating > 0 && (
-            <>
-              <span style={{ width: 1, height: 16, background: 'var(--line)', flexShrink: 0 }} />
-              <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                <Stars value={Math.round(avgRating)} size={13} />
-                <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-2)' }}>
-                  {avgRating.toFixed(1)}
-                </span>
-                <span style={{ fontSize: 13, color: 'var(--ink-4)' }}>
-                  ({reviewsLoading ? '…' : reviews.length})
-                </span>
-              </span>
-            </>
-          )}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 32, padding: '8px 0 28px' }}>
+        <div>
+          <h1 style={{ fontSize: 36, fontWeight: 700, letterSpacing: '-.025em', margin: '0 0 10px', color: 'var(--ink)', lineHeight: 1.1 }}>
+            {trail.name}
+          </h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 18, color: 'var(--ink-3)', fontSize: 14, flexWrap: 'wrap' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <Icon id="i-pin" size={15} />
+              {trail.location}, {trail.region}
+            </span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <Icon id="i-route" size={15} />
+              {trail.distance} km
+            </span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <Icon id="i-clock" size={15} />
+              {trail.duration}
+            </span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <Icon id="i-elev" size={15} />
+              +{trail.elevation} m
+            </span>
+            <span title={trail.strollerLevel === 1 ? 'Peu carrossable' : trail.strollerLevel === 2 ? 'Carrossable' : 'Très carrossable'}>
+              <PramMeter level={trail.strollerLevel as 1 | 2 | 3} size={15} />
+            </span>
+          </div>
         </div>
-
-        <h1 style={{ fontSize: 'clamp(26px, 4vw, 38px)', fontWeight: 700, letterSpacing: '-.03em', margin: '0 0 16px', color: 'var(--ink)', lineHeight: 1.15 }}>
-          {trail.name}
-        </h1>
-
-        {/* Stat pills */}
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          {[
-            { icon: 'i-route', value: `${trail.distance} km`, label: 'Distance' },
-            { icon: 'i-clock', value: trail.duration, label: 'Durée' },
-            { icon: 'i-elev', value: `+${trail.elevation} m`, label: 'Dénivelé' },
-          ].map(({ icon, value, label }) => (
-            <div
-              key={label}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 7,
-                padding: '8px 14px',
-                background: 'var(--surface)',
-                border: '1px solid var(--line)',
-                borderRadius: 999,
-                fontSize: 13,
-              }}
-            >
-              <span style={{ color: 'var(--accent)' }}><Icon id={icon} size={14} /></span>
-              <span style={{ fontWeight: 600, color: 'var(--ink)' }}>{value}</span>
-              <span style={{ color: 'var(--ink-4)' }}>{label}</span>
-            </div>
-          ))}
+        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+          <button
+            aria-label="Sauvegarder"
+            style={{ width: 38, height: 38, display: 'grid', placeItems: 'center', borderRadius: '50%', border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--ink-2)', cursor: 'pointer' }}
+          >
+            <Icon id="i-heart" size={16} />
+          </button>
+          <button
+            aria-label="Partager"
+            style={{ width: 38, height: 38, display: 'grid', placeItems: 'center', borderRadius: '50%', border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--ink-2)', cursor: 'pointer' }}
+          >
+            <Icon id="i-share" size={16} />
+          </button>
         </div>
-      </header>
+      </div>
 
       {/* 2-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 48, paddingTop: 36 }} className="trail-layout">
 
-        {/* ── Main column ──────────────────────────────── */}
-        <div className="lg:col-span-2 space-y-8">
+        {/* ── Left column ── */}
+        <div>
 
-          {/* Description */}
-          <section>
-            <h2 style={{ fontWeight: 700, fontSize: 17, letterSpacing: '-.01em', color: 'var(--ink)', marginBottom: 10 }}>
-              Description
-            </h2>
-            <p style={{ color: 'var(--ink-2)', lineHeight: 1.7, fontSize: 15, margin: 0 }}>
+          {/* Aperçu */}
+          <section style={{ paddingBottom: 36, borderBottom: '1px solid var(--line)' }}>
+            <h2 style={{ fontSize: 13, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', color: 'var(--ink-3)', margin: '0 0 18px' }}>Aperçu</h2>
+            <p style={{ color: 'var(--ink-2)', fontSize: 16, lineHeight: 1.65, maxWidth: '62ch', margin: 0 }}>
               {trail.description}
             </p>
-          </section>
-
-          {/* Tags */}
-          {trail.tags.length > 0 && (
-            <section>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10, fontSize: 12, color: 'var(--ink-3)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '.05em' }}>
-                <Icon id="i-tag" size={13} />
-                Caractéristiques
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            {trail.tags.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 16 }}>
                 {trail.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    style={{
-                      fontSize: 13,
-                      color: 'var(--ink-3)',
-                      padding: '5px 12px',
-                      borderRadius: 999,
-                      border: '1px solid var(--line)',
-                      background: 'var(--surface)',
-                    }}
-                  >
+                  <span key={tag} style={{ fontSize: 13, color: 'var(--ink-3)', padding: '4px 12px', borderRadius: 999, border: '1px solid var(--line)', background: 'var(--surface)' }}>
                     <span style={{ color: 'var(--ink-4)' }}>#</span>{tag}
                   </span>
                 ))}
               </div>
-            </section>
-          )}
-
-          {/* Helpful / Vote */}
-          <section
-            style={{
-              background: 'var(--surface)',
-              border: '1px solid var(--line)',
-              borderRadius: 14,
-              padding: '18px 20px',
-            }}
-          >
-            <VoteButton trailId={trail.id} />
+            )}
           </section>
 
-          {/* Divider */}
-          <div style={{ borderTop: '1px solid var(--line)' }} />
-
-          {/* Reviews */}
-          <section>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-              <h2 style={{ fontWeight: 700, fontSize: 17, letterSpacing: '-.01em', color: 'var(--ink)', margin: 0 }}>
-                Avis{' '}
-                <span style={{ color: 'var(--ink-4)', fontWeight: 500 }}>
-                  ({reviewsLoading ? '…' : reviews.length})
-                </span>
-              </h2>
+          {/* Helpful */}
+          <section style={{ padding: '36px 0', borderBottom: '1px solid var(--line)' }}>
+            <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14, padding: '18px 20px' }}>
+              <VoteButton trailId={trail.id} />
             </div>
+          </section>
+
+          {/* Avis */}
+          <section style={{ padding: '36px 0', borderBottom: '1px solid var(--line)' }} id="avis">
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', marginBottom: 22 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                <span style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-.02em' }}>Avis</span>
+                <span style={{ color: 'var(--ink-3)', fontSize: 14, fontWeight: 500 }}>
+                  {reviewsLoading ? '…' : `${reviews.length} retour${reviews.length !== 1 ? 's' : ''} de parents`}
+                </span>
+              </div>
+              <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                <div style={{ display: 'flex', background: 'var(--line-2)', borderRadius: 999, padding: 4 }}>
+                  {['Récents', 'Mieux notés'].map((label, i) => (
+                    <button key={label} style={{ padding: '7px 14px', fontSize: 13, fontWeight: 600, borderRadius: 999, color: i === 0 ? 'var(--ink)' : 'var(--ink-3)', background: i === 0 ? '#fff' : 'transparent', boxShadow: i === 0 ? 'var(--shadow-sm)' : 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                <a href="#laisser" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 16px', borderRadius: 999, background: 'var(--accent)', color: '#fff', fontWeight: 600, fontSize: 14 }}>
+                  <Icon id="i-plus" size={14} />
+                  Laisser un avis
+                </a>
+              </div>
+            </div>
+
             {reviewsLoading ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {[1, 2].map((i) => (
-                  <div key={i} className="animate-pulse" style={{ height: 100, borderRadius: 14, background: 'var(--line-2)' }} />
+                  <div key={i} className="animate-pulse" style={{ height: 80, borderRadius: 14, background: 'var(--line-2)' }} />
                 ))}
               </div>
             ) : (
@@ -217,60 +177,70 @@ export default function TrailPage({ params }: PageProps) {
             )}
           </section>
 
-          {/* Review form */}
-          <ReviewForm trailId={trail.id} onSubmit={handleNewReview} />
+          {/* Form */}
+          <section style={{ paddingTop: 36 }} id="laisser">
+            <ReviewForm trailId={trail.id} onSubmit={handleNewReview} />
+          </section>
         </div>
 
-        {/* ── Sidebar ──────────────────────────────────── */}
-        <div className="space-y-6 lg:sticky lg:top-[88px] lg:self-start">
+        {/* ── Sidebar ── */}
+        <aside style={{ position: 'sticky', top: 96, alignSelf: 'start' }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14, padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {[
+              { icon: 'i-route', label: 'Distance', value: `${trail.distance} km — boucle` },
+              { icon: 'i-clock', label: 'Durée', value: `≈ ${trail.duration}` },
+              { icon: 'i-elev', label: 'Dénivelé', value: `+${trail.elevation} m` },
+              { icon: 'i-tree', label: 'Terrain', value: trail.tags.filter(t => ['asphalte', 'gravier', 'terre', 'piste'].includes(t)).join(', ') || trail.tags[0] || '—' },
+            ].map(({ icon, label, value }) => (
+              <div key={label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0', borderTop: '1px solid var(--line-2)', fontSize: 14 }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: 'var(--ink-3)' }}>
+                  <Icon id={icon} size={15} />
+                  {label}
+                </span>
+                <span style={{ fontWeight: 600, color: 'var(--ink)' }}>{value}</span>
+              </div>
+            ))}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0', borderTop: '1px solid var(--line-2)', fontSize: 14 }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: 'var(--ink-3)' }}>
+                <Icon id="i-pram" size={15} />
+                Carrossable
+              </span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                <PramMeter level={trail.strollerLevel as 1 | 2 | 3} size={16} />
+              </span>
+            </div>
 
-          {/* Stroller level */}
-          <section>
-            <h3 style={{ fontWeight: 700, fontSize: 11, color: 'var(--ink-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '.04em' }}>
-              Niveau carrossabilité
-            </h3>
-            <StrollerLevelInfo level={trail.strollerLevel} />
-          </section>
+            <button style={{ width: '100%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 18px', borderRadius: 999, background: 'var(--accent)', color: '#fff', fontWeight: 600, fontSize: 15, border: 'none', cursor: 'pointer', fontFamily: 'inherit', marginTop: 6 }}>
+              <Icon id="i-pin" size={16} />
+              Voir sur la carte
+            </button>
+            <button style={{ width: '100%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 18px', borderRadius: 999, background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, fontSize: 15, border: '1px solid var(--line)', cursor: 'pointer', fontFamily: 'inherit' }}>
+              <Icon id="i-share" size={16} />
+              Partager
+            </button>
+          </div>
 
           {/* Map */}
-          <section>
-            <h3 style={{ fontWeight: 700, fontSize: 11, color: 'var(--ink-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '.04em' }}>
-              Localisation
-            </h3>
+          <div style={{ marginTop: 16 }}>
             <TrailDetailMap trail={trail} />
-          </section>
+          </div>
 
           {/* Other trails */}
-          <section>
-            <h3 style={{ fontWeight: 700, fontSize: 11, color: 'var(--ink-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '.04em' }}>
-              Autres balades
-            </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {trails
-                .filter((t) => t.id !== trail.id)
-                .slice(0, 4)
-                .map((t) => (
+          {trails.filter((t) => t.id !== trail.id).length > 0 && (
+            <div style={{ marginTop: 16 }}>
+              <h3 style={{ fontWeight: 700, fontSize: 11, color: 'var(--ink-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '.04em' }}>
+                Autres balades
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {trails.filter((t) => t.id !== trail.id).slice(0, 4).map((t) => (
                   <a
                     key={t.id}
                     href={`/balades/${t.id}`}
                     className="group"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: 12,
-                      padding: '12px 14px',
-                      background: 'var(--surface)',
-                      borderRadius: 12,
-                      border: '1px solid var(--line)',
-                      textDecoration: 'none',
-                      transition: 'border-color .15s',
-                    }}
+                    style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px', background: 'var(--surface)', borderRadius: 12, border: '1px solid var(--line)', textDecoration: 'none', transition: 'border-color .15s' }}
                   >
                     <div style={{ minWidth: 0, flex: 1 }}>
-                      <p
-                        style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-                        className="group-hover:text-[var(--accent)] transition-colors"
-                      >
+                      <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} className="group-hover:text-[var(--accent)] transition-colors">
                         {t.name}
                       </p>
                       <p style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 2 }}>{t.location}</p>
@@ -280,9 +250,10 @@ export default function TrailPage({ params }: PageProps) {
                     </div>
                   </a>
                 ))}
+              </div>
             </div>
-          </section>
-        </div>
+          )}
+        </aside>
       </div>
     </div>
   )

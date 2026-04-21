@@ -1,4 +1,5 @@
 import { Review } from '@/types'
+import { PramMeter } from './StrollerBadge'
 
 interface ReviewListProps {
   reviews: Review[]
@@ -12,94 +13,66 @@ function Icon({ id, size = 14 }: { id: string; size?: number }) {
   )
 }
 
-function StarBar({ value, total }: { value: number; total: number }) {
-  const pct = total > 0 ? (value / total) * 100 : 0
-  return (
-    <div style={{ flex: 1, height: 4, borderRadius: 999, background: 'var(--line-2)', overflow: 'hidden' }}>
-      <div style={{ height: '100%', width: `${pct}%`, background: '#f5a623', borderRadius: 999 }} />
-    </div>
-  )
-}
-
-function Stars({ value, size = 13 }: { value: number; size?: number }) {
-  return (
-    <span style={{ display: 'inline-flex', gap: 1 }}>
-      {[1, 2, 3, 4, 5].map((i) => (
-        <svg key={i} width={size} height={size} viewBox="0 0 24 24" fill={i <= value ? '#f5a623' : 'none'} stroke="#f5a623" strokeWidth={1.5}>
-          <use href="#i-star" />
-        </svg>
-      ))}
-    </span>
-  )
-}
-
 const strollerIconMap: Record<string, string> = {
   'Poussette citadine': 'i-stroller-narrow',
   'Poussette tout-terrain': 'i-stroller-wide',
   'Poussette sport / jogging': 'i-stroller-wide',
   'Poussette double': 'i-stroller-wide',
-  'Tricycle enfant': 'i-pram',
+  'Porte-bébé': 'i-baby-carrier',
+  'Trio / combinée': 'i-stroller-wide',
   'Autre': 'i-pram',
+}
+
+function pramLevel(rating: number): 1 | 2 | 3 {
+  if (rating <= 1) return 1
+  if (rating <= 2) return 2
+  return 3
 }
 
 export default function ReviewList({ reviews }: ReviewListProps) {
   if (reviews.length === 0) {
     return (
-      <div
-        style={{
-          textAlign: 'center',
-          padding: '40px 20px',
-          color: 'var(--ink-4)',
-          border: '1px dashed var(--line)',
-          borderRadius: 14,
-        }}
-      >
-        <div style={{ marginBottom: 10, color: 'var(--ink-3)' }}>
-          <Icon id="i-chat" size={28} />
+      <div style={{ background: 'var(--surface)', border: '1px dashed var(--line)', borderRadius: 14, padding: '48px 24px', textAlign: 'center', color: 'var(--ink-3)' }}>
+        <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--accent-soft)', color: 'var(--accent)', display: 'grid', placeItems: 'center', margin: '0 auto 12px' }}>
+          <Icon id="i-chat" size={22} />
         </div>
-        <p style={{ fontWeight: 500, fontSize: 14, color: 'var(--ink-3)', margin: 0 }}>Aucun avis pour le moment</p>
-        <p style={{ fontSize: 13, color: 'var(--ink-4)', marginTop: 4 }}>Soyez le premier à partager votre expérience !</p>
+        <p style={{ fontWeight: 700, fontSize: 15, color: 'var(--ink)', marginBottom: 4 }}>Aucun avis pour le moment</p>
+        <p style={{ fontSize: 13 }}>Soyez le premier à partager votre expérience.</p>
       </div>
     )
   }
 
   const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
+  const avgPram = pramLevel(avg)
 
   return (
     <div>
       {/* Summary card */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 24,
-          background: 'var(--surface)',
-          border: '1px solid var(--line)',
-          borderRadius: 14,
-          padding: '18px 20px',
-          marginBottom: 20,
-        }}
-      >
-        <div style={{ textAlign: 'center', flexShrink: 0 }}>
-          <div style={{ fontSize: 36, fontWeight: 700, letterSpacing: '-.03em', color: 'var(--ink)', lineHeight: 1 }}>
-            {avg.toFixed(1)}
+      <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14, padding: 24, display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 32, alignItems: 'center', marginBottom: 22 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 8 }}>
+          <div style={{ fontSize: 48, fontWeight: 800, letterSpacing: '-.04em', lineHeight: 1, color: 'var(--ink)' }}>
+            {avg.toFixed(1)}<small style={{ fontSize: 18, color: 'var(--ink-3)', fontWeight: 600, marginLeft: 2 }}>/3</small>
           </div>
-          <div style={{ marginTop: 6 }}>
-            <Stars value={Math.round(avg)} />
-          </div>
-          <div style={{ fontSize: 12, color: 'var(--ink-4)', marginTop: 4 }}>{reviews.length} avis</div>
+          <PramMeter level={avgPram} size={18} />
+          <div style={{ fontSize: 13, color: 'var(--ink-3)' }}>basé sur {reviews.length} avis</div>
         </div>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
-          {[5, 4, 3, 2, 1].map((star) => {
-            const count = reviews.filter((r) => r.rating === star).length
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {([3, 2, 1] as const).map((level) => {
+            const count = reviews.filter((r) => pramLevel(r.rating) === level).length
+            const pct = reviews.length > 0 ? (count / reviews.length) * 100 : 0
             return (
-              <div key={star} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 12, color: 'var(--ink-3)', width: 8, textAlign: 'right' }}>{star}</span>
-                <svg width={11} height={11} viewBox="0 0 24 24" fill="#f5a623" stroke="#f5a623" strokeWidth={1.5}>
-                  <use href="#i-star" />
-                </svg>
-                <StarBar value={count} total={reviews.length} />
-                <span style={{ fontSize: 12, color: 'var(--ink-4)', width: 18 }}>{count}</span>
+              <div key={level} style={{ display: 'grid', gridTemplateColumns: '70px 1fr 36px', gap: 10, alignItems: 'center', fontSize: 12, color: 'var(--ink-3)' }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3, color: 'var(--ink-2)', fontWeight: 600 }}>
+                  {Array.from({ length: level }).map((_, i) => (
+                    <svg key={i} width={13} height={13} fill="none" stroke="var(--accent)" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                      <use href="#i-pram-wheel" />
+                    </svg>
+                  ))}
+                </span>
+                <div style={{ height: 6, background: 'var(--line-2)', borderRadius: 999, overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${pct}%`, background: 'var(--accent)', borderRadius: 999 }} />
+                </div>
+                <span>{Math.round(pct)}%</span>
               </div>
             )
           })}
@@ -107,55 +80,45 @@ export default function ReviewList({ reviews }: ReviewListProps) {
       </div>
 
       {/* Review items */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {reviews.map((review) => (
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {reviews.map((review, i) => (
           <div
             key={review.id}
-            style={{
-              background: 'var(--surface)',
-              border: '1px solid var(--line)',
-              borderRadius: 14,
-              padding: '16px 18px',
-            }}
+            style={{ display: 'grid', gridTemplateColumns: '48px 1fr', gap: 16, padding: '22px 0', borderTop: i === 0 ? 'none' : '1px solid var(--line)' }}
           >
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 10 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                {/* Avatar */}
-                <div
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: '50%',
-                    background: 'var(--accent-soft)',
-                    border: '1.5px solid #cfdfd0',
-                    display: 'grid',
-                    placeItems: 'center',
-                    fontWeight: 700,
-                    fontSize: 14,
-                    color: 'var(--accent)',
-                    flexShrink: 0,
-                  }}
-                >
-                  {review.author.charAt(0).toUpperCase()}
-                </div>
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--ink)' }}>{review.author}</div>
-                  {review.strollerType && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 3 }}>
-                      <span style={{ color: 'var(--ink-3)' }}>
-                        <Icon id={strollerIconMap[review.strollerType] ?? 'i-pram'} size={12} />
-                      </span>
-                      <span style={{ fontSize: 12, color: 'var(--ink-3)' }}>{review.strollerType}</span>
-                    </div>
-                  )}
-                </div>
+            {/* Avatar */}
+            <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--accent-soft)', color: 'var(--accent-ink)', display: 'grid', placeItems: 'center', fontWeight: 700, fontSize: 15, letterSpacing: '-.01em' }}>
+              {review.author.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                <span style={{ fontWeight: 700, fontSize: 15 }}>{review.author}</span>
+                <span style={{ display: 'inline-flex', gap: 3, marginLeft: 4 }}>
+                  <PramMeter level={pramLevel(review.rating)} size={14} />
+                </span>
+                <span style={{ fontSize: 12, color: 'var(--ink-3)' }}>{review.date}</span>
+                {review.strollerType && (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'var(--line-2)', color: 'var(--ink-2)', borderRadius: 999, padding: '3px 9px', fontSize: 11, fontWeight: 600 }}>
+                    <Icon id={strollerIconMap[review.strollerType] ?? 'i-pram'} size={12} />
+                    {review.strollerType}
+                  </span>
+                )}
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4, flexShrink: 0 }}>
-                <Stars value={review.rating} />
-                <span style={{ fontSize: 12, color: 'var(--ink-4)' }}>{review.date}</span>
+              <p style={{ marginTop: 6, color: 'var(--ink-2)', fontSize: 14.5, lineHeight: 1.6, maxWidth: '60ch', marginBottom: 10 }}>
+                {review.comment}
+              </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14, color: 'var(--ink-3)', fontSize: 12.5 }}>
+                <button style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--ink-3)', fontSize: 12.5, fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}>
+                  <Icon id="i-thumb-up" size={13} /> Utile
+                </button>
+                <button style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--ink-3)', fontSize: 12.5, fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}>
+                  <Icon id="i-chat" size={13} /> Répondre
+                </button>
+                <button style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--ink-3)', fontSize: 12.5, fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', marginLeft: 'auto' }}>
+                  <Icon id="i-flag" size={13} /> Signaler
+                </button>
               </div>
             </div>
-            <p style={{ fontSize: 14, color: 'var(--ink-2)', lineHeight: 1.6, margin: 0 }}>{review.comment}</p>
           </div>
         ))}
       </div>

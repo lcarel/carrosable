@@ -87,6 +87,9 @@ function IconSprite() {
         <symbol id="i-arrow-left" viewBox="0 0 24 24">
           <path d="M19 12H5M12 5l-7 7 7 7" />
         </symbol>
+        <symbol id="i-back" viewBox="0 0 24 24">
+          <path d="M14 6l-6 6 6 6" />
+        </symbol>
         <symbol id="i-tag" viewBox="0 0 24 24">
           <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
           <circle cx="7" cy="7" r="1.5" fill="currentColor" stroke="none" />
