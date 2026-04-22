@@ -62,6 +62,7 @@ export default function HomePage() {
   const [search, setSearch] = useState('')
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null)
   const [selectedRegion, setSelectedRegion] = useState('')
+  const [selectedDuration, setSelectedDuration] = useState('')
   const [view, setView] = useState<'list' | 'map'>('list')
   const [selectedTrailId, setSelectedTrailId] = useState<string | undefined>()
 
@@ -75,9 +76,18 @@ export default function HomePage() {
         trail.tags.some((tag) => tag.toLowerCase().includes(search.toLowerCase()))
       const matchLevel = selectedLevel === null || trail.strollerLevel === selectedLevel
       const matchRegion = !selectedRegion || trail.region === selectedRegion
-      return matchSearch && matchLevel && matchRegion
+      const matchDuration = (() => {
+        if (!selectedDuration) return true
+        const [h, m] = trail.duration.replace('h', ':').split(':').map(Number)
+        const mins = (h || 0) * 60 + (m || 0)
+        if (selectedDuration === 'short') return mins < 60
+        if (selectedDuration === 'medium') return mins >= 60 && mins <= 120
+        if (selectedDuration === 'long') return mins > 120
+        return true
+      })()
+      return matchSearch && matchLevel && matchRegion && matchDuration
     })
-  }, [search, selectedLevel, selectedRegion])
+  }, [search, selectedLevel, selectedRegion, selectedDuration])
 
   const selectedTrail: Trail | undefined = selectedTrailId
     ? filtered.find((t) => t.id === selectedTrailId)
@@ -224,24 +234,6 @@ export default function HomePage() {
           style={{ maxWidth: 1240, margin: '0 auto', padding: '0 32px' }}
           className="flex flex-wrap items-center gap-3 py-3.5"
         >
-          {/* Sliders icon */}
-          <button
-            className="flex items-center justify-center transition-colors"
-            style={{
-              padding: '8px 10px',
-              borderRadius: 999,
-              border: '1px solid var(--line)',
-              background: 'var(--surface)',
-              color: 'var(--ink-2)',
-              cursor: 'pointer',
-            }}
-            title="Filtres"
-          >
-            <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-              <use href="#i-sliders" />
-            </svg>
-          </button>
-
           {/* Level chips */}
           {[1, 2, 3].map((level) => (
             <LevelChip
@@ -285,10 +277,43 @@ export default function HomePage() {
             </svg>
           </div>
 
+          {/* Duration select */}
+          <div className="flex items-center gap-2" style={{ position: 'relative' }}>
+            <select
+              value={selectedDuration}
+              onChange={(e) => setSelectedDuration(e.target.value)}
+              style={{
+                appearance: 'none',
+                WebkitAppearance: 'none',
+                padding: '8px 32px 8px 14px',
+                borderRadius: 999,
+                border: `1px solid ${selectedDuration ? '#cfdfd0' : 'var(--line)'}`,
+                background: selectedDuration ? 'var(--accent-soft)' : 'var(--surface)',
+                fontSize: 13,
+                fontWeight: 500,
+                color: selectedDuration ? 'var(--accent-ink)' : 'var(--ink-2)',
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+                outline: 'none',
+              }}
+            >
+              <option value="">Toutes les durées</option>
+              <option value="short">Moins d'1h</option>
+              <option value="medium">1h – 2h</option>
+              <option value="long">Plus de 2h</option>
+            </select>
+            <svg
+              width="14" height="14" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
+              style={{ position: 'absolute', right: 12, pointerEvents: 'none', color: selectedDuration ? 'var(--accent-ink)' : 'var(--ink-3)' }}
+            >
+              <use href="#i-chev" />
+            </svg>
+          </div>
+
           {/* Clear */}
-          {(search || selectedLevel || selectedRegion) && (
+          {(search || selectedLevel || selectedRegion || selectedDuration) && (
             <button
-              onClick={() => { setSearch(''); setSelectedLevel(null); setSelectedRegion('') }}
+              onClick={() => { setSearch(''); setSelectedLevel(null); setSelectedRegion(''); setSelectedDuration('') }}
               style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 500, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', fontFamily: 'inherit' }}
             >
               Effacer

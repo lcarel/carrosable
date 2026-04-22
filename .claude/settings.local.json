@@ -11,7 +11,25 @@
       "Bash(gunzip -f /tmp/carrossable.gz)",
       "Read(//tmp/**)",
       "Bash(tar -tf /tmp/carrossable)",
-      "Bash(tar -xf /tmp/carrossable -C /tmp/)"
+      "Bash(tar -xf /tmp/carrossable -C /tmp/)",
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(cp \"/Users/leocarel-nehr/.claude/projects/-Users-leocarel-nehr-Desktop-github-carrosable/8717adee-d6b2-4a1b-9f8c-8be092d36391/tool-results/webfetch-1776514162283-fbzjuo.bin\" /tmp/fiche.gz && gunzip -f /tmp/fiche.gz && tar -tf /tmp/fiche)",
+      "Bash(tar -xf /tmp/fiche -C /tmp/ --overwrite 2>/dev/null; echo \"done\")",
+      "Bash(tar -xf /tmp/fiche -C /tmp/ --overwrite && ls \"/tmp/test-icone/project/\")",
+      "Bash(mkdir -p /tmp/fiche_extract && tar -xf /tmp/fiche -C /tmp/fiche_extract && ls \"/tmp/fiche_extract/test-icone/project/\")",
+      "Bash(npx tsc:*)",
+      "Bash(cp /tmp/proposer_design.bin /tmp/proposer_design.bin.gz)",
+      "Bash(gunzip -f /tmp/proposer_design.bin.gz)",
+      "Read(//private/tmp/**)",
+      "Bash(cd /tmp && tar -xf proposer_design.bin && ls -la /tmp/)",
+      "Bash(cd /tmp && tar -tf proposer_design.bin | head -50)",
+      "mcp__claude_ai_Vercel__deploy_to_vercel",
+      "Bash(cp \"/Users/leocarel-nehr/.claude/projects/-Users-leocarel-nehr-Desktop-github-carrosable/a8fa7d6b-5b56-4aa2-b9c2-11e24fd4a329/tool-results/webfetch-1776776960477-rxrw5p.bin\" /tmp/design.gz)",
+      "Bash(gunzip -c /tmp/design.gz)",
+      "Bash(tar xf *)",
+      "Bash(cp \"/Users/leocarel-nehr/.claude/projects/-Users-leocarel-nehr-Desktop-github-carrosable/a8fa7d6b-5b56-4aa2-b9c2-11e24fd4a329/tool-results/webfetch-1776782408924-nkckc2.bin\" /tmp/design2.gz)",
+      "Bash(gunzip -c /tmp/design2.gz)",
+      "Bash(tar tf *)"
     ]
   }
 }

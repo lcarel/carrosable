@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic'
 import { trails, getTrailById } from '@/data/trails'
 import { Review } from '@/types'
 import { PramMeter } from '@/components/StrollerBadge'
-import VoteButton from '@/components/VoteButton'
 import ReviewForm from '@/components/ReviewForm'
 import ReviewList from '@/components/ReviewList'
 import { notFound } from 'next/navigation'
@@ -69,7 +68,7 @@ export default function TrailPage({ params }: PageProps) {
       </nav>
 
       {/* Page header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 32, padding: '8px 0 28px' }}>
+      <div style={{ padding: '8px 0 28px' }}>
         <div>
           <h1 style={{ fontSize: 36, fontWeight: 700, letterSpacing: '-.025em', margin: '0 0 10px', color: 'var(--ink)', lineHeight: 1.1 }}>
             {trail.name}
@@ -96,20 +95,6 @@ export default function TrailPage({ params }: PageProps) {
             </span>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-          <button
-            aria-label="Sauvegarder"
-            style={{ width: 38, height: 38, display: 'grid', placeItems: 'center', borderRadius: '50%', border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--ink-2)', cursor: 'pointer' }}
-          >
-            <Icon id="i-heart" size={16} />
-          </button>
-          <button
-            aria-label="Partager"
-            style={{ width: 38, height: 38, display: 'grid', placeItems: 'center', borderRadius: '50%', border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--ink-2)', cursor: 'pointer' }}
-          >
-            <Icon id="i-share" size={16} />
-          </button>
-        </div>
       </div>
 
       {/* 2-column layout */}
@@ -133,13 +118,6 @@ export default function TrailPage({ params }: PageProps) {
                 ))}
               </div>
             )}
-          </section>
-
-          {/* Helpful */}
-          <section style={{ padding: '36px 0', borderBottom: '1px solid var(--line)' }}>
-            <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14, padding: '18px 20px' }}>
-              <VoteButton trailId={trail.id} />
-            </div>
           </section>
 
           {/* Avis */}

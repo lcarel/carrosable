@@ -27,28 +27,17 @@ export default function TrailCard({ trail, badge = null }: TrailCardProps) {
       }}
     >
       <div style={{ padding: '22px 22px 22px', display: 'flex', flexDirection: 'column', gap: 14, flex: 1 }}>
-        {/* Top: title block + save button */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
-          <div>
-            <div className="flex items-center gap-1.5" style={{ fontSize: 12, color: 'var(--ink-3)', fontWeight: 500, letterSpacing: '.01em', textTransform: 'uppercase' }}>
-              <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--ink-4)', flexShrink: 0 }}>
-                <use href="#i-pin" />
-              </svg>
-              {trail.location}
-            </div>
-            <h3 style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-.015em', margin: '4px 0 0', color: 'var(--ink)' }} className="group-hover:text-[var(--accent)] transition-colors line-clamp-2">
-              {trail.name}
-            </h3>
-          </div>
-          <button
-            aria-label="Sauvegarder"
-            onClick={(e) => e.preventDefault()}
-            style={{ width: 32, height: 32, borderRadius: '50%', border: '1px solid var(--line)', background: '#fff', color: 'var(--ink-3)', display: 'grid', placeItems: 'center', flexShrink: 0 }}
-          >
-            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-              <use href="#i-heart" />
+        {/* Top: title block */}
+        <div>
+          <div className="flex items-center gap-1.5" style={{ fontSize: 12, color: 'var(--ink-3)', fontWeight: 500, letterSpacing: '.01em', textTransform: 'uppercase' }}>
+            <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--ink-4)', flexShrink: 0 }}>
+              <use href="#i-pin" />
             </svg>
-          </button>
+            {trail.location}
+          </div>
+          <h3 style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-.015em', margin: '4px 0 0', color: 'var(--ink)' }} className="group-hover:text-[var(--accent)] transition-colors line-clamp-2">
+            {trail.name}
+          </h3>
         </div>
 
         {/* Short note */}
