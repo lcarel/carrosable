@@ -30,7 +30,7 @@ const initialForm = {
 }
 
 const inputCss: React.CSSProperties = {
-  background: 'var(--bg)', border: '1px solid var(--line)', borderRadius: 10,
+  background: 'var(--bg)', border: '1px solid var(--line-2)', borderRadius: 10,
   padding: '12px 14px', fontSize: 14, outline: 'none', width: '100%',
   fontFamily: 'inherit', color: 'var(--ink)', boxSizing: 'border-box',
   transition: 'border-color .15s',
@@ -120,7 +120,7 @@ export default function ProposerPage() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 24, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, padding: '32px 28px' }}>
 
         {/* Nom */}
         <div style={fieldCss}>
