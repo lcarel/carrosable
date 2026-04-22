@@ -5,10 +5,9 @@ import dynamic from 'next/dynamic'
 import { trails, getTrailById } from '@/data/trails'
 import { Review } from '@/types'
 import { PramMeter } from '@/components/StrollerBadge'
-import ReviewForm from '@/components/ReviewForm'
 import ReviewList from '@/components/ReviewList'
 import { notFound } from 'next/navigation'
-import { fetchReviews, addReview } from '@/lib/reviewsApi'
+import { fetchReviews } from '@/lib/reviewsApi'
 
 const TrailDetailMap = dynamic(() => import('@/components/TrailDetailMap'), {
   ssr: false,
@@ -46,11 +45,6 @@ export default function TrailPage({ params }: PageProps) {
   }, [trail])
 
   if (!trail) return notFound()
-
-  const handleNewReview = async (review: Omit<Review, 'id' | 'date'>) => {
-    const saved = await addReview(review)
-    setReviews((prev) => [saved, ...prev])
-  }
 
   return (
     <div style={{ maxWidth: 1080, margin: '0 auto', padding: '0 32px 96px' }}>
@@ -137,10 +131,6 @@ export default function TrailPage({ params }: PageProps) {
                     </button>
                   ))}
                 </div>
-                <a href="#laisser" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 16px', borderRadius: 999, background: 'var(--accent)', color: '#fff', fontWeight: 600, fontSize: 14 }}>
-                  <Icon id="i-plus" size={14} />
-                  Laisser un avis
-                </a>
               </div>
             </div>
 
@@ -155,10 +145,6 @@ export default function TrailPage({ params }: PageProps) {
             )}
           </section>
 
-          {/* Form */}
-          <section style={{ paddingTop: 36 }} id="laisser">
-            <ReviewForm trailId={trail.id} onSubmit={handleNewReview} />
-          </section>
         </div>
 
         {/* ── Sidebar ── */}
