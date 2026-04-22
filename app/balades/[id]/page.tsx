@@ -1,20 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { trails, getTrailById } from '@/data/trails'
-import { Review } from '@/types'
 import { PramMeter } from '@/components/StrollerBadge'
-import ReviewList from '@/components/ReviewList'
 import { notFound } from 'next/navigation'
-import { fetchReviews } from '@/lib/reviewsApi'
 
 const TrailDetailMap = dynamic(() => import('@/components/TrailDetailMap'), {
   ssr: false,
   loading: () => (
     <div
       className="animate-pulse"
-      style={{ height: 200, borderRadius: 14, background: 'var(--line-2)', border: '1px solid var(--line)' }}
+      style={{ height: 400, borderRadius: 14, background: 'var(--line-2)', border: '1px solid var(--line)' }}
     />
   ),
 })
@@ -33,18 +29,11 @@ function Icon({ id, size = 16 }: { id: string; size?: number }) {
 
 export default function TrailPage({ params }: PageProps) {
   const trail = getTrailById(params.id)
-  const [reviews, setReviews] = useState<Review[]>([])
-  const [reviewsLoading, setReviewsLoading] = useState(true)
-
-  useEffect(() => {
-    if (!trail) return
-    fetchReviews(trail.id)
-      .then(setReviews)
-      .catch(console.error)
-      .finally(() => setReviewsLoading(false))
-  }, [trail])
-
   if (!trail) return notFound()
+
+  const mapsUrl = trail.coordinates
+    ? `https://www.google.com/maps/dir/?api=1&destination=${trail.coordinates.lat},${trail.coordinates.lng}`
+    : null
 
   return (
     <div style={{ maxWidth: 1080, margin: '0 auto', padding: '0 32px 96px' }}>
@@ -63,31 +52,29 @@ export default function TrailPage({ params }: PageProps) {
 
       {/* Page header */}
       <div style={{ padding: '8px 0 28px' }}>
-        <div>
-          <h1 style={{ fontSize: 36, fontWeight: 700, letterSpacing: '-.025em', margin: '0 0 10px', color: 'var(--ink)', lineHeight: 1.1 }}>
-            {trail.name}
-          </h1>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 18, color: 'var(--ink-3)', fontSize: 14, flexWrap: 'wrap' }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-              <Icon id="i-pin" size={15} />
-              {trail.location}, {trail.region}
-            </span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-              <Icon id="i-route" size={15} />
-              {trail.distance} km
-            </span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-              <Icon id="i-clock" size={15} />
-              {trail.duration}
-            </span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-              <Icon id="i-elev" size={15} />
-              +{trail.elevation} m
-            </span>
-            <span title={trail.strollerLevel === 1 ? 'Peu carrossable' : trail.strollerLevel === 2 ? 'Carrossable' : 'Très carrossable'}>
-              <PramMeter level={trail.strollerLevel as 1 | 2 | 3} size={15} />
-            </span>
-          </div>
+        <h1 style={{ fontSize: 36, fontWeight: 700, letterSpacing: '-.025em', margin: '0 0 10px', color: 'var(--ink)', lineHeight: 1.1 }}>
+          {trail.name}
+        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 18, color: 'var(--ink-3)', fontSize: 14, flexWrap: 'wrap' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <Icon id="i-pin" size={15} />
+            {trail.location}, {trail.region}
+          </span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <Icon id="i-route" size={15} />
+            {trail.distance} km
+          </span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <Icon id="i-clock" size={15} />
+            {trail.duration}
+          </span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <Icon id="i-elev" size={15} />
+            +{trail.elevation} m
+          </span>
+          <span title={trail.strollerLevel === 1 ? 'Peu carrossable' : trail.strollerLevel === 2 ? 'Carrossable' : 'Très carrossable'}>
+            <PramMeter level={trail.strollerLevel as 1 | 2 | 3} size={15} />
+          </span>
         </div>
       </div>
 
@@ -98,7 +85,7 @@ export default function TrailPage({ params }: PageProps) {
         <div>
 
           {/* Aperçu */}
-          <section style={{ paddingBottom: 36, borderBottom: '1px solid var(--line)' }}>
+          <section style={{ paddingBottom: 36 }}>
             <h2 style={{ fontSize: 13, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', color: 'var(--ink-3)', margin: '0 0 18px' }}>Aperçu</h2>
             <p style={{ color: 'var(--ink-2)', fontSize: 16, lineHeight: 1.65, maxWidth: '62ch', margin: 0 }}>
               {trail.description}
@@ -114,44 +101,20 @@ export default function TrailPage({ params }: PageProps) {
             )}
           </section>
 
-          {/* Avis */}
-          <section style={{ padding: '36px 0', borderBottom: '1px solid var(--line)' }} id="avis">
-            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', marginBottom: 22 }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-                <span style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-.02em' }}>Avis</span>
-                <span style={{ color: 'var(--ink-3)', fontSize: 14, fontWeight: 500 }}>
-                  {reviewsLoading ? '…' : `${reviews.length} retour${reviews.length !== 1 ? 's' : ''} de parents`}
-                </span>
-              </div>
-              <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                <div style={{ display: 'flex', background: 'var(--line-2)', borderRadius: 999, padding: 4 }}>
-                  {['Récents', 'Mieux notés'].map((label, i) => (
-                    <button key={label} style={{ padding: '7px 14px', fontSize: 13, fontWeight: 600, borderRadius: 999, color: i === 0 ? 'var(--ink)' : 'var(--ink-3)', background: i === 0 ? '#fff' : 'transparent', boxShadow: i === 0 ? 'var(--shadow-sm)' : 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}>
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+          {/* Map */}
+          <section>
+            <h2 style={{ fontSize: 13, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', color: 'var(--ink-3)', margin: '0 0 14px' }}>Localisation</h2>
+            <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid var(--line)' }}>
+              <TrailDetailMap trail={trail} height={420} />
             </div>
-
-            {reviewsLoading ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {[1, 2].map((i) => (
-                  <div key={i} className="animate-pulse" style={{ height: 80, borderRadius: 14, background: 'var(--line-2)' }} />
-                ))}
-              </div>
-            ) : (
-              <ReviewList reviews={reviews} />
-            )}
           </section>
-
         </div>
 
         {/* ── Sidebar ── */}
         <aside style={{ position: 'sticky', top: 96, alignSelf: 'start' }}>
           <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 14, padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
             {[
-              { icon: 'i-route', label: 'Distance', value: `${trail.distance} km — boucle` },
+              { icon: 'i-route', label: 'Distance', value: `${trail.distance} km` },
               { icon: 'i-clock', label: 'Durée', value: `≈ ${trail.duration}` },
               { icon: 'i-elev', label: 'Dénivelé', value: `+${trail.elevation} m` },
               { icon: 'i-tree', label: 'Terrain', value: trail.tags.filter(t => ['asphalte', 'gravier', 'terre', 'piste'].includes(t)).join(', ') || trail.tags[0] || '—' },
@@ -169,24 +132,25 @@ export default function TrailPage({ params }: PageProps) {
                 <Icon id="i-pram" size={15} />
                 Carrossable
               </span>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                <PramMeter level={trail.strollerLevel as 1 | 2 | 3} size={16} />
-              </span>
+              <PramMeter level={trail.strollerLevel as 1 | 2 | 3} size={16} />
             </div>
 
-            <button style={{ width: '100%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 18px', borderRadius: 999, background: 'var(--accent)', color: '#fff', fontWeight: 600, fontSize: 15, border: 'none', cursor: 'pointer', fontFamily: 'inherit', marginTop: 6 }}>
-              <Icon id="i-pin" size={16} />
-              Voir sur la carte
-            </button>
-            <button style={{ width: '100%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 18px', borderRadius: 999, background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, fontSize: 15, border: '1px solid var(--line)', cursor: 'pointer', fontFamily: 'inherit' }}>
-              <Icon id="i-share" size={16} />
-              Partager
-            </button>
-          </div>
-
-          {/* Map */}
-          <div style={{ marginTop: 16 }}>
-            <TrailDetailMap trail={trail} />
+            {mapsUrl ? (
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ width: '100%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 18px', borderRadius: 999, background: 'var(--accent)', color: '#fff', fontWeight: 600, fontSize: 15, marginTop: 6, boxSizing: 'border-box' }}
+              >
+                <Icon id="i-pin" size={16} />
+                Aller au départ
+              </a>
+            ) : (
+              <button disabled style={{ width: '100%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '14px 18px', borderRadius: 999, background: 'var(--line-2)', color: 'var(--ink-3)', fontWeight: 600, fontSize: 15, border: 'none', marginTop: 6, cursor: 'default', fontFamily: 'inherit' }}>
+                <Icon id="i-pin" size={16} />
+                Coordonnées non disponibles
+              </button>
+            )}
           </div>
 
           {/* Other trails */}

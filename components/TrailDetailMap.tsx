@@ -16,7 +16,7 @@ const fixLeafletIcons = () => {
   })
 }
 
-export default function TrailDetailMap({ trail }: { trail: Trail }) {
+export default function TrailDetailMap({ trail, height = 208 }: { trail: Trail; height?: number }) {
   useEffect(() => {
     fixLeafletIcons()
   }, [])
@@ -24,11 +24,12 @@ export default function TrailDetailMap({ trail }: { trail: Trail }) {
   const position: [number, number] = [trail.coordinates.lat, trail.coordinates.lng]
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-gray-200">
+    <div>
       <MapContainer
         center={position}
         zoom={13}
-        className="w-full h-52 z-0"
+        style={{ width: '100%', height }}
+        className="z-0"
         scrollWheelZoom={false}
       >
         <TileLayer
@@ -42,14 +43,6 @@ export default function TrailDetailMap({ trail }: { trail: Trail }) {
           </Popup>
         </Marker>
       </MapContainer>
-      <a
-        href={`https://www.openstreetmap.org/?mlat=${trail.coordinates.lat}&mlon=${trail.coordinates.lng}&zoom=13`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block text-center text-sm text-green-700 hover:text-green-900 font-medium py-2.5 border-t border-gray-200 bg-white"
-      >
-        Ouvrir sur OpenStreetMap →
-      </a>
     </div>
   )
 }
