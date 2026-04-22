@@ -34,6 +34,12 @@ const levelLabels: Record<number, string> = {
 
 const regions = Array.from(new Set(trails.map((t) => t.region))).sort()
 
+function parseDurationMins(d: string): number {
+  const [h, m] = d.replace('h', ':').split(':').map(Number)
+  return (h || 0) * 60 + (m || 0)
+}
+const totalHours = Math.round(trails.reduce((s, t) => s + parseDurationMins(t.duration), 0) / 60)
+
 /* ── Filter chip ──────────────────────────────────────────── */
 function LevelChip({ level, active, onClick }: { level: number; active: boolean; onClick: () => void }) {
   return (
@@ -143,9 +149,8 @@ export default function HomePage() {
 
               <div className="flex items-center gap-8 mt-9">
                 {[
-                  { num: `${trails.length}+`, lbl: 'balades vérifiées' },
-                  { num: `${regions.length}`, lbl: 'régions' },
-                  { num: '3 200', lbl: 'avis de parents' },
+                  { num: `${trails.length}`, lbl: 'balades vérifiées' },
+                  { num: `${totalHours}h`, lbl: 'de balade au total' },
                 ].map(({ num, lbl }, i) => (
                   <div key={lbl} className="flex items-center gap-8">
                     {i > 0 && <div style={{ width: 1, height: 32, background: 'var(--line)' }} />}
