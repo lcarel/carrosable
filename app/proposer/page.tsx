@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { submitProposal } from '@/lib/proposalsApi'
 
 function Icon({ id, size = 16 }: { id: string; size?: number }) {
@@ -42,11 +42,33 @@ export default function ProposerPage() {
   const [form, setForm] = useState(initialForm)
   const [errors, setErrors] = useState<Partial<Record<keyof typeof initialForm, string>>>({})
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const regionAutoFilled = useRef(false)
 
   function set(field: keyof typeof initialForm, value: string | number | null) {
+    if (field === 'region') regionAutoFilled.current = false
     setForm((p) => ({ ...p, [field]: value }))
     setErrors((p) => ({ ...p, [field]: undefined }))
   }
+
+  useEffect(() => {
+    const city = form.location.trim()
+    if (!city || city.length < 2) return
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(city)}&fields=region&boost=population&limit=1`
+        )
+        const data = await res.json()
+        const regionName: string | undefined = data[0]?.region?.name
+        if (regionName && REGIONS.includes(regionName) && !regionAutoFilled.current) {
+          regionAutoFilled.current = true
+          setForm((p) => ({ ...p, region: regionName }))
+          setErrors((p) => ({ ...p, region: undefined }))
+        }
+      } catch { /* silently ignore */ }
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [form.location])
 
   function validate() {
     const e: Partial<Record<keyof typeof initialForm, string>> = {}
