@@ -54,8 +54,7 @@ export default function ProposerPage() {
     if (!form.location.trim()) e.location = 'Requis'
     if (!form.region) e.region = 'Requis'
     if (!form.description.trim()) e.description = 'Requis'
-    if (!form.distance || isNaN(Number(form.distance)) || Number(form.distance) <= 0) e.distance = 'Distance invalide'
-    if (!form.duration.trim()) e.duration = 'Ex : 1h30'
+    if (form.distance && (isNaN(Number(form.distance)) || Number(form.distance) <= 0)) e.distance = 'Distance invalide'
     if (!form.strollerLevel) e.strollerLevel = 'Choisissez un niveau'
     if (form.lat && isNaN(Number(form.lat))) e.lat = 'Latitude invalide'
     if (form.lng && isNaN(Number(form.lng))) e.lng = 'Longitude invalide'
@@ -70,8 +69,8 @@ export default function ProposerPage() {
     try {
       await submitProposal({
         name: form.name.trim(), location: form.location.trim(), region: form.region,
-        description: form.description.trim(), distance: Number(form.distance),
-        elevation: 0, duration: form.duration.trim(), strollerLevel: form.strollerLevel!,
+        description: form.description.trim(), distance: form.distance ? Number(form.distance) : 0,
+        elevation: 0, duration: form.duration.trim() || '—', strollerLevel: form.strollerLevel!,
         tags: '', lat: Number(form.lat) || 0, lng: Number(form.lng) || 0,
         submitterName: '', submitterEmail: '',
       })
@@ -175,7 +174,7 @@ export default function ProposerPage() {
         {/* Distance + Durée */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
           <div style={fieldCss}>
-            <label style={labelCss}>Distance (km) <span style={{ color: 'var(--accent)' }}>*</span></label>
+            <label style={labelCss}>Distance (km) <span style={{ fontSize: 12, color: 'var(--ink-4)', fontWeight: 400 }}>facultatif</span></label>
             <input
               type="number" min="0" step="0.1" value={form.distance} onChange={(e) => set('distance', e.target.value)}
               placeholder="Ex : 5"
@@ -184,7 +183,7 @@ export default function ProposerPage() {
             {errors.distance && <span style={{ fontSize: 12, color: '#c0392b' }}>{errors.distance}</span>}
           </div>
           <div style={fieldCss}>
-            <label style={labelCss}>Durée <span style={{ color: 'var(--accent)' }}>*</span></label>
+            <label style={labelCss}>Durée <span style={{ fontSize: 12, color: 'var(--ink-4)', fontWeight: 400 }}>facultatif</span></label>
             <input
               type="text" value={form.duration} onChange={(e) => set('duration', e.target.value)}
               placeholder="Ex : 1h30"
