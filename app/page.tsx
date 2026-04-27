@@ -7,11 +7,11 @@ import { Trail } from '@/types'
 import TrailCard from '@/components/TrailCard'
 import { PramMeter } from '@/components/StrollerBadge'
 
-const CARD_BADGES: ('heart' | 'new' | null)[] = ['heart', null, 'new', null, null, 'heart', null, 'new', null, null, null, null]
+const CARD_BADGES: ('new' | null)[] = [null, null, 'new', null, null, null, null, 'new', null, null, null, null]
 const TESTIMONIALS = [
-  { quote: "On a découvert le Parc Borély grâce à Carrossable — la petite est restée debout tout le long !", author: "Marie, maman de Zoé, 14 mois · Marseille" },
-  { quote: "Enfin un site où on sait vraiment si le chemin passe avec notre poussette double.", author: "Thomas & Léa, parents de jumeaux · Aix-en-Provence" },
-  { quote: "L'application qu'on attendait sans le savoir. Simple, juste, utile.", author: "Camille, maman de deux enfants · Lyon" },
+  { quote: "On a découvert le Parc Borély grâce à Carrossable — la petite est restée debout tout le long !", name: "Marie, maman de Zoé (14 mois)", city: "Marseille", initial: "M" },
+  { quote: "Enfin un site où on sait vraiment si le chemin passe avec notre poussette double.", name: "Thomas & Léa, parents de jumeaux", city: "Aix-en-Provence", initial: "T" },
+  { quote: "L'application qu'on attendait sans le savoir. Simple, juste, utile.", name: "Camille, maman de deux enfants", city: "Lyon", initial: "C" },
 ]
 
 const TrailMap = dynamic(() => import('@/components/TrailMap'), {
@@ -40,25 +40,53 @@ function parseDurationMins(d: string): number {
 }
 const totalHours = Math.round(trails.reduce((s, t) => s + parseDurationMins(t.duration), 0) / 60)
 
-/* ── Filter chip ──────────────────────────────────────────── */
-function LevelChip({ level, active, onClick }: { level: number; active: boolean; onClick: () => void }) {
+/* ── Rating tile ──────────────────────────────────────────── */
+const tileDescs: Record<number, string> = {
+  1: 'Terrain difficile, tout-terrain conseillé',
+  2: 'Chemin praticable, poussette robuste',
+  3: 'Asphalte, toutes poussettes passent',
+}
+function WheelIcon({ on }: { on: boolean }) {
+  return (
+    <svg width={20} height={20} viewBox="0 0 24 24" fill="none" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
+      style={{ stroke: on ? 'var(--accent)' : 'var(--line)', flexShrink: 0 }}>
+      <circle cx="12" cy="12" r="8"/>
+      <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+      <path d="M12 4v16M4 12h16M6.3 6.3l11.4 11.4M17.7 6.3L6.3 17.7"/>
+    </svg>
+  )
+}
+function RatingTile({ level, active, onClick }: { level: number | null; active: boolean; onClick: () => void }) {
+  const isAll = level === null
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 transition-all"
       style={{
-        padding: '8px 14px',
-        borderRadius: 999,
-        border: `1px solid ${active ? '#cfdfd0' : 'var(--line)'}`,
-        background: active ? 'var(--accent-soft)' : 'var(--surface)',
-        fontSize: 13,
-        fontWeight: 500,
-        color: active ? 'var(--accent-ink)' : 'var(--ink-2)',
-        cursor: 'pointer',
+        flex: isAll ? 'none' : 1,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
+        padding: isAll ? '14px 20px' : '14px 12px 12px',
+        borderRadius: 14,
+        border: `1.5px solid ${active ? '#b6d4ba' : 'var(--line)'}`,
+        background: active ? 'var(--accent-soft)' : '#fff',
+        cursor: 'pointer', textAlign: 'center', fontFamily: 'inherit',
+        boxShadow: active ? '0 2px 12px -4px rgba(47,93,63,.18)' : 'none',
+        transition: 'all .18s ease',
+        justifyContent: 'center',
       }}
     >
-      <PramMeter level={level as 1 | 2 | 3} size={13} />
-      <span className="hidden sm:inline">{levelLabels[level]}</span>
+      {!isAll && (
+        <div style={{ display: 'flex', gap: 5, justifyContent: 'center' }}>
+          {[1, 2, 3].map((i) => <WheelIcon key={i} on={i <= (level ?? 0)} />)}
+        </div>
+      )}
+      <div style={{ fontWeight: 700, fontSize: isAll ? 14 : 13, color: active ? 'var(--accent-ink)' : 'var(--ink-2)', letterSpacing: '-.01em', lineHeight: 1.2 }}>
+        {isAll ? 'Toutes' : levelLabels[level!]}
+      </div>
+      {!isAll && (
+        <div style={{ fontSize: 11.5, color: active ? 'var(--accent-ink)' : 'var(--ink-3)', lineHeight: 1.4, opacity: active ? 0.75 : 1 }}>
+          {tileDescs[level!]}
+        </div>
+      )}
     </button>
   )
 }
@@ -69,6 +97,7 @@ export default function HomePage() {
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null)
   const [selectedRegion, setSelectedRegion] = useState('')
   const [selectedDuration, setSelectedDuration] = useState('')
+  const [selectedDistance, setSelectedDistance] = useState('')
   const [view, setView] = useState<'list' | 'map'>('list')
   const [selectedTrailId, setSelectedTrailId] = useState<string | undefined>()
 
@@ -91,9 +120,16 @@ export default function HomePage() {
         if (selectedDuration === 'long') return mins > 120
         return true
       })()
-      return matchSearch && matchLevel && matchRegion && matchDuration
+      const matchDistance = (() => {
+        if (!selectedDistance) return true
+        if (selectedDistance === 'short') return trail.distance < 3
+        if (selectedDistance === 'medium') return trail.distance >= 3 && trail.distance <= 6
+        if (selectedDistance === 'long') return trail.distance > 6
+        return true
+      })()
+      return matchSearch && matchLevel && matchRegion && matchDuration && matchDistance
     })
-  }, [search, selectedLevel, selectedRegion, selectedDuration])
+  }, [search, selectedLevel, selectedRegion, selectedDuration, selectedDistance])
 
   const selectedTrail: Trail | undefined = selectedTrailId
     ? filtered.find((t) => t.id === selectedTrailId)
@@ -206,17 +242,23 @@ export default function HomePage() {
       </section>
 
       {/* ── TESTIMONIALS ─────────────────────────────────── */}
-      <section style={{ background: 'var(--surface)', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)', padding: '28px 0' }}>
+      <section style={{ background: 'var(--accent)', padding: '48px 0' }}>
         <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 32px' }}>
-          <div className="flex items-stretch testimonials-strip">
+          <div className="testimonials-strip" style={{ display: 'flex', alignItems: 'stretch' }}>
             {TESTIMONIALS.map((t, i) => (
-              <div key={i} className="flex items-stretch">
-                {i > 0 && <div style={{ width: 1, background: 'var(--line)', flexShrink: 0 }} />}
-                <div style={{ flex: 1, padding: i === 0 ? '0 32px 0 0' : '0 32px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  <p style={{ fontSize: 14, color: 'var(--ink-2)', lineHeight: 1.6, fontStyle: 'italic', letterSpacing: 0, margin: 0 }}>
-                    &ldquo;{t.quote}&rdquo;
-                  </p>
-                  <span style={{ fontSize: 12, color: 'var(--ink-3)', fontWeight: 600 }}>— {t.author}</span>
+              <div key={i} style={{ flex: 1, padding: '32px 36px', display: 'flex', flexDirection: 'column', gap: 16, position: 'relative', borderLeft: i > 0 ? '1px solid rgba(255,255,255,.12)' : 'none' }}>
+                {/* Giant opening quote */}
+                <span aria-hidden="true" style={{ position: 'absolute', top: 24, left: 32, fontSize: 72, lineHeight: 1, color: 'rgba(255,255,255,.15)', fontFamily: 'Georgia,serif', pointerEvents: 'none', userSelect: 'none' }}>&ldquo;</span>
+                <p style={{ flex: 1, fontSize: 16, color: 'rgba(255,255,255,.92)', lineHeight: 1.65, fontStyle: 'italic', letterSpacing: 0, margin: 0, position: 'relative', paddingTop: 8 }}>
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,.2)', color: '#fff', fontWeight: 700, fontSize: 13, display: 'grid', placeItems: 'center', flexShrink: 0, border: '1.5px solid rgba(255,255,255,.3)' }}>
+                    {t.initial}
+                  </div>
+                  <span style={{ fontSize: 12.5, color: 'rgba(255,255,255,.65)', fontWeight: 600, lineHeight: 1.4 }}>
+                    {t.name}<br />{t.city}
+                  </span>
                 </div>
               </div>
             ))}
@@ -225,136 +267,88 @@ export default function HomePage() {
       </section>
 
       {/* ── FILTERS ──────────────────────────────────────── */}
-      <section
-        style={{
-          borderTop: '1px solid var(--line)',
-          borderBottom: '1px solid var(--line)',
-          background: 'var(--surface)',
-          position: 'sticky',
-          top: 68,
-          zIndex: 40,
-        }}
-      >
-        <div
-          style={{ maxWidth: 1240, margin: '0 auto', padding: '0 32px' }}
-          className="flex flex-wrap items-center gap-3 py-3.5"
-        >
-          {/* Level chips */}
-          {[1, 2, 3].map((level) => (
-            <LevelChip
-              key={level}
-              level={level}
-              active={selectedLevel === level}
-              onClick={() => setSelectedLevel(selectedLevel === level ? null : level)}
-            />
-          ))}
+      <section style={{ background: 'var(--surface)', borderBottom: '1px solid var(--line)', position: 'sticky', top: 68, zIndex: 40 }}>
+        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '18px 32px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-          {/* Region select */}
-          <div className="flex items-center gap-2" style={{ position: 'relative' }}>
-            <select
-              value={selectedRegion}
-              onChange={(e) => setSelectedRegion(e.target.value)}
-              style={{
-                appearance: 'none',
-                WebkitAppearance: 'none',
-                padding: '8px 32px 8px 14px',
-                borderRadius: 999,
-                border: '1px solid var(--line)',
-                background: 'var(--surface)',
-                fontSize: 13,
-                fontWeight: 500,
-                color: 'var(--ink-2)',
-                cursor: 'pointer',
-                fontFamily: 'inherit',
-                outline: 'none',
-              }}
-            >
-              <option value="">Toutes les régions</option>
-              {regions.map((r) => (
-                <option key={r} value={r}>{r}</option>
+          {/* Row 1: Rating tiles */}
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.07em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 8 }}>
+              Niveau de carrossabilité
+            </div>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
+              <RatingTile level={null} active={selectedLevel === null} onClick={() => setSelectedLevel(null)} />
+              {[1, 2, 3].map((level) => (
+                <RatingTile key={level} level={level} active={selectedLevel === level} onClick={() => setSelectedLevel(selectedLevel === level ? null : level)} />
               ))}
-            </select>
-            <svg
-              width="14" height="14" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
-              style={{ position: 'absolute', right: 12, pointerEvents: 'none', color: 'var(--ink-3)' }}
-            >
-              <use href="#i-chev" />
-            </svg>
+            </div>
           </div>
 
-          {/* Duration select */}
-          <div className="flex items-center gap-2" style={{ position: 'relative' }}>
-            <select
-              value={selectedDuration}
-              onChange={(e) => setSelectedDuration(e.target.value)}
-              style={{
-                appearance: 'none',
-                WebkitAppearance: 'none',
-                padding: '8px 32px 8px 14px',
-                borderRadius: 999,
-                border: `1px solid ${selectedDuration ? '#cfdfd0' : 'var(--line)'}`,
-                background: selectedDuration ? 'var(--accent-soft)' : 'var(--surface)',
-                fontSize: 13,
-                fontWeight: 500,
-                color: selectedDuration ? 'var(--accent-ink)' : 'var(--ink-2)',
-                cursor: 'pointer',
-                fontFamily: 'inherit',
-                outline: 'none',
-              }}
-            >
-              <option value="">Toutes les durées</option>
-              <option value="short">Moins d'1h</option>
-              <option value="medium">1h – 2h</option>
-              <option value="long">Plus de 2h</option>
-            </select>
-            <svg
-              width="14" height="14" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
-              style={{ position: 'absolute', right: 12, pointerEvents: 'none', color: selectedDuration ? 'var(--accent-ink)' : 'var(--ink-3)' }}
-            >
-              <use href="#i-chev" />
-            </svg>
-          </div>
+          {/* Row 2: Selects + clear + view toggle */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+            {/* Region */}
+            {(() => {
+              const selStyle: React.CSSProperties = { appearance: 'none', WebkitAppearance: 'none', padding: '9px 36px 9px 34px', border: '1.5px solid var(--line)', background: '#fff', borderRadius: 999, font: '600 13px/1 inherit', color: 'var(--ink-2)', cursor: 'pointer', outline: 'none', fontFamily: 'inherit' }
+              return (
+                <>
+                  <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
+                    <svg style={{ position: 'absolute', left: 12, width: 14, height: 14, color: 'var(--ink-3)', pointerEvents: 'none', stroke: 'currentColor', fill: 'none', strokeWidth: 1.5, strokeLinecap: 'round', strokeLinejoin: 'round' }} viewBox="0 0 24 24"><path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                    <select value={selectedRegion} onChange={(e) => setSelectedRegion(e.target.value)} style={selStyle}>
+                      <option value="">Toutes les régions</option>
+                      {regions.map((r) => <option key={r} value={r}>{r}</option>)}
+                    </select>
+                    <span style={{ position: 'absolute', right: 13, top: '50%', width: 6, height: 6, borderRight: '1.5px solid var(--ink-3)', borderBottom: '1.5px solid var(--ink-3)', transform: 'translateY(-70%) rotate(45deg)', pointerEvents: 'none' }} />
+                  </div>
+                  {/* Distance */}
+                  <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
+                    <svg style={{ position: 'absolute', left: 12, width: 14, height: 14, color: 'var(--ink-3)', pointerEvents: 'none', stroke: 'currentColor', fill: 'none', strokeWidth: 1.5, strokeLinecap: 'round', strokeLinejoin: 'round' }} viewBox="0 0 24 24"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h4a4 4 0 0 0 0-8h0a4 4 0 0 1 0-8h4"/></svg>
+                    <select value={selectedDistance} onChange={(e) => setSelectedDistance(e.target.value)} style={selStyle}>
+                      <option value="">Toute distance</option>
+                      <option value="short">Moins de 3 km</option>
+                      <option value="medium">3 – 6 km</option>
+                      <option value="long">Plus de 6 km</option>
+                    </select>
+                    <span style={{ position: 'absolute', right: 13, top: '50%', width: 6, height: 6, borderRight: '1.5px solid var(--ink-3)', borderBottom: '1.5px solid var(--ink-3)', transform: 'translateY(-70%) rotate(45deg)', pointerEvents: 'none' }} />
+                  </div>
+                  {/* Duration */}
+                  <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
+                    <svg style={{ position: 'absolute', left: 12, width: 14, height: 14, color: 'var(--ink-3)', pointerEvents: 'none', stroke: 'currentColor', fill: 'none', strokeWidth: 1.5, strokeLinecap: 'round', strokeLinejoin: 'round' }} viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    <select value={selectedDuration} onChange={(e) => setSelectedDuration(e.target.value)} style={selStyle}>
+                      <option value="">Toute durée</option>
+                      <option value="short">Moins d'1h</option>
+                      <option value="medium">1h – 2h</option>
+                      <option value="long">Plus de 2h</option>
+                    </select>
+                    <span style={{ position: 'absolute', right: 13, top: '50%', width: 6, height: 6, borderRight: '1.5px solid var(--ink-3)', borderBottom: '1.5px solid var(--ink-3)', transform: 'translateY(-70%) rotate(45deg)', pointerEvents: 'none' }} />
+                  </div>
+                </>
+              )
+            })()}
 
-          {/* Clear */}
-          {(search || selectedLevel || selectedRegion || selectedDuration) && (
-            <button
-              onClick={() => { setSearch(''); setSelectedLevel(null); setSelectedRegion(''); setSelectedDuration('') }}
-              style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 500, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', fontFamily: 'inherit' }}
-            >
-              Effacer
-            </button>
-          )}
-
-          {/* View toggle */}
-          <div
-            className="ml-auto flex items-center"
-            style={{ background: 'var(--line-2)', borderRadius: 999, padding: 4 }}
-          >
-            {(['list', 'map'] as const).map((v) => (
+            {/* Clear */}
+            {(search || selectedLevel !== null || selectedRegion || selectedDuration || selectedDistance) && (
               <button
-                key={v}
-                onClick={() => setView(v)}
-                className="flex items-center gap-1.5"
-                style={{
-                  padding: '6px 14px',
-                  borderRadius: 999,
-                  fontSize: 13,
-                  fontWeight: 500,
-                  color: view === v ? 'var(--ink)' : 'var(--ink-3)',
-                  background: view === v ? '#fff' : 'transparent',
-                  boxShadow: view === v ? 'var(--shadow-sm)' : 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontFamily: 'inherit',
-                  transition: 'all .15s ease',
-                }}
+                onClick={() => { setSearch(''); setSelectedLevel(null); setSelectedRegion(''); setSelectedDuration(''); setSelectedDistance('') }}
+                style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 0', fontFamily: 'inherit' }}
               >
-                <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-                  <use href={v === 'list' ? '#i-list' : '#i-map'} />
-                </svg>
-                <span className="hidden sm:inline">{v === 'list' ? 'Liste' : 'Carte'}</span>
+                Effacer
               </button>
-            ))}
+            )}
+
+            {/* View toggle */}
+            <div style={{ marginLeft: 'auto', display: 'flex', padding: 4, background: 'var(--line-2)', borderRadius: 999 }}>
+              {(['list', 'map'] as const).map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setView(v)}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 16px', borderRadius: 999, fontSize: 13, fontWeight: 600, color: view === v ? 'var(--ink)' : 'var(--ink-3)', background: view === v ? '#fff' : 'transparent', boxShadow: view === v ? 'var(--shadow-sm)' : 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
+                >
+                  <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                    <use href={v === 'list' ? '#i-list' : '#i-map'} />
+                  </svg>
+                  <span className="hidden sm:inline">{v === 'list' ? 'Liste' : 'Carte'}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>

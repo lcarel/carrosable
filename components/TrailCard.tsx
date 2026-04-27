@@ -6,7 +6,7 @@ const levelLabel = (l: number) =>
 
 interface TrailCardProps {
   trail: Trail
-  badge?: 'heart' | 'new' | null
+  badge?: 'new' | null
 }
 
 export default function TrailCard({ trail, badge = null }: TrailCardProps) {
@@ -53,11 +53,6 @@ export default function TrailCard({ trail, badge = null }: TrailCardProps) {
             <PramMeter level={trail.strollerLevel as 1 | 2 | 3} size={13} />
             <span style={{ letterSpacing: '.01em' }}>{levelLabel(trail.strollerLevel)}</span>
           </div>
-          {badge === 'heart' && (
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, letterSpacing: '.02em', textTransform: 'uppercase', background: 'var(--warm-soft)', color: 'var(--warm)', borderRadius: 999, padding: '4px 9px' }}>
-              Coup de cœur
-            </span>
-          )}
           {badge === 'new' && (
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, letterSpacing: '.02em', textTransform: 'uppercase', background: 'var(--accent-soft)', color: 'var(--accent-ink)', borderRadius: 999, padding: '4px 9px' }}>
               Nouveau

@@ -34,9 +34,8 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 960px) {
   .hero-grid { grid-template-columns: 1fr !important; }
   .hero-grid > div:last-child { max-width: 400px; }
-  .testimonials-strip { flex-direction: column; gap: 20px; }
-  .testimonials-strip > div { padding: 0 !important; }
-  .testimonials-strip > div > div[style*="width: 1px"] { width: 100% !important; height: 1px; }
+  .testimonials-strip { flex-direction: column !important; }
+  .testimonials-strip > div { border-left: none !important; border-top: 1px solid rgba(255,255,255,.12); }
   .trail-layout { grid-template-columns: 1fr !important; gap: 24px !important; }
   .trail-layout aside { position: static !important; }
 }
