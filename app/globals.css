@@ -82,10 +82,11 @@ a { color: inherit; text-decoration: none; }
   .page-container { padding-left: 16px; padding-right: 16px; }
   .filter-inner { padding: 10px 16px 10px; gap: 8px; }
 
-  /* Tiles: compact pill style on mobile */
+  /* Tiles: compact scrollable pills on mobile */
   .filter-label { display: none; }
-  .filter-tiles-row { gap: 6px; }
-  .rtile { flex-direction: row !important; gap: 6px; padding: 8px 12px !important; border-radius: 999px !important; flex-shrink: 0; }
+  .filter-tiles-row { gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+  .filter-tiles-row::-webkit-scrollbar { display: none; }
+  .rtile { flex-direction: row !important; gap: 6px; padding: 8px 12px !important; border-radius: 999px !important; flex: 0 0 auto !important; }
   .rtile-wheels svg { width: 14px !important; height: 14px !important; }
   .rtile-desc { display: none; }
   .rtile-name { font-size: 12px !important; white-space: nowrap; }
