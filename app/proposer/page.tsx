@@ -13,10 +13,10 @@ export default function ProposerPage() {
         Pour proposer une balade, envoyez-nous un mail avec le nom, la localisation et quelques infos sur le parcours.
       </p>
       <a
-        href="mailto:balade-carrosable@gmail.com"
+        href="mailto:balade.carrossable@gmail.com"
         style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 24px', borderRadius: 999, background: 'var(--accent)', color: '#fff', fontWeight: 600, fontSize: 15 }}
       >
-        balade-carrosable@gmail.com
+        balade.carrossable@gmail.com
       </a>
       <div style={{ marginTop: 40 }}>
         <a href="/" style={{ fontSize: 13, color: 'var(--ink-4)' }}>← Retour aux balades</a>
