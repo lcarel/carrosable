@@ -139,7 +139,7 @@ export default function HomePage() {
     <>
       {/* ── HERO ─────────────────────────────────────────── */}
       <section style={{ padding: '64px 0 48px' }}>
-        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 32px' }}>
+        <div className="page-container" style={{ maxWidth: 1240, margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: 48, alignItems: 'center' }} className="hero-grid">
             {/* Left: text */}
             <div>
@@ -243,7 +243,7 @@ export default function HomePage() {
 
       {/* ── TESTIMONIALS ─────────────────────────────────── */}
       <section style={{ background: 'var(--accent)', padding: '48px 0' }}>
-        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 32px' }}>
+        <div className="page-container" style={{ maxWidth: 1240, margin: '0 auto' }}>
           <div className="testimonials-strip" style={{ display: 'flex', alignItems: 'stretch' }}>
             {TESTIMONIALS.map((t, i) => (
               <div key={i} style={{ flex: 1, padding: '32px 36px', display: 'flex', flexDirection: 'column', gap: 16, position: 'relative', borderLeft: i > 0 ? '1px solid rgba(255,255,255,.12)' : 'none' }}>
@@ -268,14 +268,14 @@ export default function HomePage() {
 
       {/* ── FILTERS ──────────────────────────────────────── */}
       <section style={{ background: 'var(--surface)', borderBottom: '1px solid var(--line)', position: 'sticky', top: 68, zIndex: 40 }}>
-        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '18px 32px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div className="filter-inner">
 
           {/* Row 1: Rating tiles */}
           <div>
             <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.07em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 8 }}>
               Niveau de carrossabilité
             </div>
-            <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
+            <div className="filter-tiles-row">
               <RatingTile level={null} active={selectedLevel === null} onClick={() => setSelectedLevel(null)} />
               {[1, 2, 3].map((level) => (
                 <RatingTile key={level} level={level} active={selectedLevel === level} onClick={() => setSelectedLevel(selectedLevel === level ? null : level)} />
@@ -284,7 +284,7 @@ export default function HomePage() {
           </div>
 
           {/* Row 2: Selects + clear + view toggle */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <div className="filter-selects-row">
             {/* Region */}
             {(() => {
               const selStyle: React.CSSProperties = { appearance: 'none', WebkitAppearance: 'none', padding: '9px 36px 9px 34px', border: '1.5px solid var(--line)', background: '#fff', borderRadius: 999, font: '600 13px/1 inherit', color: 'var(--ink-2)', cursor: 'pointer', outline: 'none', fontFamily: 'inherit' }
@@ -355,7 +355,7 @@ export default function HomePage() {
 
       {/* ── RESULTS ──────────────────────────────────────── */}
       <section style={{ padding: '32px 0 96px' }}>
-        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 32px' }}>
+        <div className="page-container" style={{ maxWidth: 1240, margin: '0 auto' }}>
           {/* Results header */}
           <div className="flex items-baseline justify-between mb-5">
             <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-.01em', color: 'var(--ink)' }}>
@@ -376,10 +376,7 @@ export default function HomePage() {
               <p style={{ fontSize: 14, marginTop: 6 }}>Essayez de modifier vos filtres.</p>
             </div>
           ) : view === 'list' ? (
-            <div
-              className="grid gap-5"
-              style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}
-            >
+            <div className="cards-grid">
               {filtered.map((trail, i) => (
                 <TrailCard key={trail.id} trail={trail} badge={CARD_BADGES[i % CARD_BADGES.length]} />
               ))}
@@ -422,7 +419,7 @@ export default function HomePage() {
       </section>
 
       {/* ── CTA PROPOSER ─────────────────────────────────── */}
-      <section style={{ maxWidth: 1240, margin: '0 auto', padding: '0 32px 64px' }}>
+      <section className="page-container" style={{ maxWidth: 1240, margin: '0 auto', paddingBottom: 64, paddingTop: 0 }}>
         <div
           style={{
             background: 'var(--accent)',
@@ -464,7 +461,7 @@ export default function HomePage() {
       </section>
 
       {/* ── ABOUT ────────────────────────────────────────── */}
-      <section id="about" style={{ borderTop: '1px solid var(--line)', padding: '64px 32px', background: 'var(--surface)' }}>
+      <section id="about" className="page-container" style={{ borderTop: '1px solid var(--line)', paddingTop: 64, paddingBottom: 64, background: 'var(--surface)' }}>
         <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
           <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-.015em', marginBottom: 8, color: 'var(--ink)' }}>
             Comment fonctionne la classification ?

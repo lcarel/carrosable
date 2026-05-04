@@ -31,13 +31,63 @@ body {
 
 a { color: inherit; text-decoration: none; }
 
+/* ── Page container (32px desktop → 16px mobile) ── */
+.page-container { padding-left: 32px; padding-right: 32px; }
+
+/* ── Cards grid ── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* ── Filter tiles ── */
+.filter-tiles-row {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+/* ── Filter section inner ── */
+.filter-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 18px 32px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Filter selects row ── */
+.filter-selects-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 @media (max-width: 960px) {
+  .page-container { padding-left: 16px; padding-right: 16px; }
+  .filter-inner { padding: 14px 16px 12px; }
+
+  /* Tiles: horizontal scroll instead of overflow */
+  .filter-tiles-row { overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+  .filter-tiles-row::-webkit-scrollbar { display: none; }
+  .filter-tiles-row > button { flex-shrink: 0; min-width: 110px; }
+
+  .cards-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+
   .hero-grid { grid-template-columns: 1fr !important; }
-  .hero-grid > div:last-child { max-width: 400px; }
+  .hero-grid > div:last-child { display: none; } /* hide illustration on mobile */
   .testimonials-strip { flex-direction: column !important; }
   .testimonials-strip > div { border-left: none !important; border-top: 1px solid rgba(255,255,255,.12); }
   .trail-layout { grid-template-columns: 1fr !important; gap: 24px !important; }
   .trail-layout aside { position: static !important; }
+}
+
+@media (max-width: 640px) {
+  .cards-grid { grid-template-columns: 1fr; }
+  .filter-selects-row { gap: 8px; }
 }
 
 @layer utilities {
