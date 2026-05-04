@@ -61,29 +61,24 @@ function RatingTile({ level, active, onClick }: { level: number | null; active: 
   return (
     <button
       onClick={onClick}
+      className="rtile"
       style={{
         flex: isAll ? 'none' : 1,
-        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
-        padding: isAll ? '14px 20px' : '14px 12px 12px',
-        borderRadius: 14,
         border: `1.5px solid ${active ? '#b6d4ba' : 'var(--line)'}`,
         background: active ? 'var(--accent-soft)' : '#fff',
-        cursor: 'pointer', textAlign: 'center', fontFamily: 'inherit',
         boxShadow: active ? '0 2px 12px -4px rgba(47,93,63,.18)' : 'none',
-        transition: 'all .18s ease',
-        justifyContent: 'center',
       }}
     >
       {!isAll && (
-        <div style={{ display: 'flex', gap: 5, justifyContent: 'center' }}>
+        <div className="rtile-wheels">
           {[1, 2, 3].map((i) => <WheelIcon key={i} on={i <= (level ?? 0)} />)}
         </div>
       )}
-      <div style={{ fontWeight: 700, fontSize: isAll ? 14 : 13, color: active ? 'var(--accent-ink)' : 'var(--ink-2)', letterSpacing: '-.01em', lineHeight: 1.2 }}>
+      <div className="rtile-name" style={{ color: active ? 'var(--accent-ink)' : 'var(--ink-2)', fontSize: isAll ? 14 : 13 }}>
         {isAll ? 'Toutes' : levelLabels[level!]}
       </div>
       {!isAll && (
-        <div style={{ fontSize: 11.5, color: active ? 'var(--accent-ink)' : 'var(--ink-3)', lineHeight: 1.4, opacity: active ? 0.75 : 1 }}>
+        <div className="rtile-desc" style={{ color: active ? 'var(--accent-ink)' : 'var(--ink-3)', opacity: active ? 0.75 : 1 }}>
           {tileDescs[level!]}
         </div>
       )}
@@ -272,7 +267,7 @@ export default function HomePage() {
 
           {/* Row 1: Rating tiles */}
           <div>
-            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.07em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 8 }}>
+            <div className="filter-label" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.07em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 8 }}>
               Niveau de carrossabilité
             </div>
             <div className="filter-tiles-row">

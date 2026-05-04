@@ -48,6 +48,18 @@ a { color: inherit; text-decoration: none; }
   align-items: stretch;
 }
 
+/* Tile internals */
+.rtile {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding: 14px 12px 12px;
+  border-radius: 14px;
+  cursor: pointer; text-align: center; font-family: inherit;
+  transition: all .18s ease; justify-content: center;
+}
+.rtile-wheels { display: flex; gap: 5px; justify-content: center; }
+.rtile-name { font-weight: 700; letter-spacing: -.01em; line-height: 1.2; }
+.rtile-desc { font-size: 11.5px; line-height: 1.4; }
+
 /* ── Filter section inner ── */
 .filter-inner {
   max-width: 1240px;
@@ -68,12 +80,15 @@ a { color: inherit; text-decoration: none; }
 
 @media (max-width: 960px) {
   .page-container { padding-left: 16px; padding-right: 16px; }
-  .filter-inner { padding: 14px 16px 12px; }
+  .filter-inner { padding: 10px 16px 10px; gap: 8px; }
 
-  /* Tiles: horizontal scroll instead of overflow */
-  .filter-tiles-row { overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
-  .filter-tiles-row::-webkit-scrollbar { display: none; }
-  .filter-tiles-row > button { flex-shrink: 0; min-width: 110px; }
+  /* Tiles: compact pill style on mobile */
+  .filter-label { display: none; }
+  .filter-tiles-row { gap: 6px; }
+  .rtile { flex-direction: row !important; gap: 6px; padding: 8px 12px !important; border-radius: 999px !important; flex-shrink: 0; }
+  .rtile-wheels svg { width: 14px !important; height: 14px !important; }
+  .rtile-desc { display: none; }
+  .rtile-name { font-size: 12px !important; white-space: nowrap; }
 
   .cards-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
 
