@@ -463,11 +463,17 @@ export default function HomePage() {
       {/* ── ABOUT ────────────────────────────────────────── */}
       <section id="about" className="page-container" style={{ borderTop: '1px solid var(--line)', paddingTop: 64, paddingBottom: 64, background: 'var(--surface)' }}>
         <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-.015em', marginBottom: 8, color: 'var(--ink)' }}>
-            Comment fonctionne la classification ?
+          <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-.015em', marginBottom: 16, color: 'var(--ink)' }}>
+            À propos de Carrossable
           </h2>
-          <p style={{ fontSize: 15, color: 'var(--ink-3)', marginBottom: 40 }}>
-            Chaque balade est notée de 1 à 3 roues selon l'accessibilité du terrain.
+          <p style={{ fontSize: 15, color: 'var(--ink-2)', lineHeight: 1.7, maxWidth: '60ch', margin: '0 auto 48px' }}>
+            Carrossable est né d&apos;un constat simple : il n&apos;existait pas de ressource dédiée aux balades accessibles en poussette en France. Fondé par un groupe de parents amoureux de randonnée, notre site référence des centaines d&apos;itinéraires vérifiés, classés par niveau de carrossabilité. Notre mission : permettre à chaque famille de trouver facilement une balade adaptée, près de chez elle, sans mauvaise surprise.
+          </p>
+          <h3 style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-.01em', marginBottom: 8, color: 'var(--ink)' }}>
+            Comment fonctionne la classification ?
+          </h3>
+          <p style={{ fontSize: 15, color: 'var(--ink-3)', marginBottom: 24 }}>
+            Chaque balade est notée de 1 à 3 roues selon l&apos;accessibilité du terrain.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
             {([1, 2, 3] as const).map((level) => {
