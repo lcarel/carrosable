@@ -18,7 +18,23 @@ export default function ProposerPage() {
       >
         balade.carrossable@gmail.com
       </a>
-      <div style={{ marginTop: 40 }}>
+
+      <div style={{ marginTop: 48, padding: '28px 32px', borderRadius: 16, background: 'var(--warm-soft)', border: '1px solid #edd9c8', textAlign: 'left' }}>
+        <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: '.04em', textTransform: 'uppercase', color: 'var(--warm)', margin: '0 0 10px' }}>
+          Un avis, un retour, un mot doux ?
+        </p>
+        <p style={{ fontSize: 14, color: 'var(--ink-2)', lineHeight: 1.65, margin: '0 0 16px' }}>
+          Vous avez testé une balade et voulez partager votre expérience ? Une suggestion pour améliorer le site ? Ou juste l&apos;envie de nous écrire ? On lit tous les messages avec plaisir.
+        </p>
+        <a
+          href="mailto:balade.carrossable@gmail.com"
+          style={{ fontSize: 14, fontWeight: 600, color: 'var(--warm)', textDecoration: 'underline', textUnderlineOffset: 3 }}
+        >
+          balade.carrossable@gmail.com
+        </a>
+      </div>
+
+      <div style={{ marginTop: 32 }}>
         <a href="/" style={{ fontSize: 13, color: 'var(--ink-4)' }}>← Retour aux balades</a>
       </div>
     </div>
