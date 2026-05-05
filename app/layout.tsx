@@ -188,11 +188,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   placeItems: 'center',
                   color: '#fff',
                   flexShrink: 0,
+                  fontWeight: 800,
+                  fontSize: 18,
+                  letterSpacing: '-.02em',
+                  fontFamily: 'inherit',
                 }}
               >
-                <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-                  <use href="#i-pram" />
-                </svg>
+                C
               </span>
               <span>
                 <div style={{ fontWeight: 700, letterSpacing: '-.02em', fontSize: 17, color: 'var(--ink)' }}>
