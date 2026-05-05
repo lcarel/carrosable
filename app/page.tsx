@@ -155,29 +155,6 @@ export default function HomePage() {
                 Des itinéraires testés par de vrais parents, notés à la roue de poussette. Parce que chaque sortie compte.
               </p>
 
-              <form
-                onSubmit={(e) => e.preventDefault()}
-                className="flex items-center gap-3 mt-7"
-                style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 999, padding: '6px 6px 6px 20px', boxShadow: 'var(--shadow-sm)', maxWidth: 560 }}
-              >
-                <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--ink-3)', flexShrink: 0 }}>
-                  <use href="#i-search" />
-                </svg>
-                <input
-                  type="text"
-                  placeholder="Un parc, une ville, un type de chemin…"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontSize: 15, padding: '12px 0', color: 'var(--ink)', fontFamily: 'inherit' }}
-                />
-                <button
-                  type="submit"
-                  style={{ background: 'var(--accent)', color: '#fff', padding: '10px 18px', borderRadius: 999, fontWeight: 600, fontSize: 14, border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
-                >
-                  Trouver
-                </button>
-              </form>
-
               <div className="flex items-center gap-8 mt-9">
                 {[
                   { num: `${trails.length}`, lbl: 'balades vérifiées' },
@@ -351,6 +328,34 @@ export default function HomePage() {
       {/* ── RESULTS ──────────────────────────────────────── */}
       <section style={{ padding: '32px 0 96px' }}>
         <div className="page-container" style={{ maxWidth: 1240, margin: '0 auto' }}>
+
+          {/* Search bar */}
+          <form
+            onSubmit={(e) => e.preventDefault()}
+            className="flex items-center gap-3"
+            style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 999, padding: '6px 6px 6px 20px', boxShadow: 'var(--shadow-sm)', marginBottom: 20 }}
+          >
+            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--ink-3)', flexShrink: 0 }}>
+              <use href="#i-search" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Un parc, une ville, un type de chemin…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontSize: 15, padding: '10px 0', color: 'var(--ink)', fontFamily: 'inherit' }}
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                style={{ color: 'var(--ink-4)', background: 'none', border: 'none', cursor: 'pointer', padding: '0 4px', fontSize: 18, lineHeight: 1, fontFamily: 'inherit' }}
+              >
+                ×
+              </button>
+            )}
+          </form>
+
           {/* Results header */}
           <div className="flex items-baseline justify-between mb-5">
             <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-.01em', color: 'var(--ink)' }}>
