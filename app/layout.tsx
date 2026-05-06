@@ -21,10 +21,7 @@ export const metadata: Metadata = {
   },
 }
 
-import { Analytics } from '@vercel/analytics/react'  // ← ajouter
-
-
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from '@vercel/analytics/next'
 
 /* Inline SVG sprite — shared across all pages */
 function IconSprite() {
@@ -264,7 +261,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </p>
           </div>
         </footer>
-         <Analytics />  {/* ← ajouter juste avant </body> */}
+        <Analytics />
       </body>
     </html>
   )
