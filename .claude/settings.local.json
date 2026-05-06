@@ -29,7 +29,11 @@
       "Bash(tar xf *)",
       "Bash(cp \"/Users/leocarel-nehr/.claude/projects/-Users-leocarel-nehr-Desktop-github-carrosable/a8fa7d6b-5b56-4aa2-b9c2-11e24fd4a329/tool-results/webfetch-1776782408924-nkckc2.bin\" /tmp/design2.gz)",
       "Bash(gunzip -c /tmp/design2.gz)",
-      "Bash(tar tf *)"
+      "Bash(tar tf *)",
+      "mcp__claude_ai_Vercel__get_project",
+      "Bash(curl *dvlkbfdctivikietlecivc)",
+      "Bash(cp \"/Users/leocarel-nehr/.claude/projects/-Users-leocarel-nehr-Desktop-github-carrosable/a8fa7d6b-5b56-4aa2-b9c2-11e24fd4a329/tool-results/webfetch-1777274727189-z3urz7.bin\" /tmp/design3.gz)",
+      "Bash(gunzip -f /tmp/design3.gz)"
     ]
   }
 }

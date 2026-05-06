@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { trails } from '@/data/trails'
 import { Trail } from '@/types'
@@ -84,6 +84,19 @@ function RatingTile({ level, active, onClick }: { level: number | null; active: 
       )}
     </button>
   )
+}
+
+/* ── Geo helpers ──────────────────────────────────────────── */
+type Suggestion =
+  | { kind: 'trail'; trail: Trail }
+  | { kind: 'region'; value: string }
+  | { kind: 'city'; label: string; region?: string; lat: number; lng: number }
+
+function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
+  const R = 6371, toRad = (d: number) => d * Math.PI / 180
+  const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1)
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 }
 
 /* ── Main page ────────────────────────────────────────────── */

@@ -21,6 +21,11 @@ export const metadata: Metadata = {
   },
 }
 
+import { Analytics } from '@vercel/analytics/react'  // ← ajouter
+
+
+import { Analytics } from "@vercel/analytics/next"
+
 /* Inline SVG sprite — shared across all pages */
 function IconSprite() {
   return (
@@ -158,6 +163,7 @@ function IconSprite() {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
+
       <body className={manrope.className} style={{ minHeight: '100vh' }}>
         <IconSprite />
 
@@ -258,6 +264,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </p>
           </div>
         </footer>
+         <Analytics />  {/* ← ajouter juste avant </body> */}
       </body>
     </html>
   )
